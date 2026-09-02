@@ -45,13 +45,15 @@
 
         html {
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Courtier New, Tahoma, Verdana, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.5;
+            overflow-x: hidden;
         }
 
         a {
@@ -81,12 +83,10 @@
 
         .header-main {
             min-height: 66px;
-
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 28px;
-
+            display: flex;
+            justify-content: space-between;
             align-items: center;
+            padding: 10px 0;
         }
 
 
@@ -104,57 +104,7 @@
         }
 
 
-        /* Search bar */
-
-        .search {
-            width: 100%;
-            max-width: 640px;
-
-            display: flex;
-
-            border: 2px solid #414954;
-            border-radius: 30px;
-
-            overflow: hidden;
-
-            background: #11161c;
-        }
-
-        .search input {
-            width: 100%;
-
-            border: none;
-            outline: none;
-
-            background: transparent;
-            color: white;
-
-            font-size: 0.95rem;
-
-            padding: 10px 18px;
-        }
-
-        .search input::placeholder {
-            color: #9da4af;
-        }
-
-        .search button {
-            border: none;
-
-            width: 72px;
-
-            background: var(--purple-light);
-            color: #111;
-
-            font-size: 1rem;
-            font-weight: 700;
-
-            cursor: pointer;
-        }
-
-
         /* Right navigation */
-
         .top-links {
             display: flex;
             align-items: center;
@@ -163,15 +113,6 @@
             color: #c3c8d0;
 
             font-size: 0.9rem;
-        }
-
-        .top-links a:hover {
-            color: white;
-        }
-
-        .top-links .active {
-            color: white;
-            font-weight: 700;
         }
 
         .contact-button {
@@ -186,49 +127,6 @@
         }
 
 
-        /* =========================================================
-           SECONDARY SPORTS NAV
-        ========================================================= */
-
-        .sports-nav {
-            background: var(--bg-dark);
-        }
-
-        .sports-nav-inner {
-            min-height: 47px;
-
-            display: flex;
-            align-items: center;
-            gap: 24px;
-
-            overflow-x: auto;
-
-            color: var(--muted);
-
-            font-size: 0.88rem;
-
-            scrollbar-width: none;
-        }
-
-        .sports-nav-inner::-webkit-scrollbar {
-            display: none;
-        }
-
-        .sports-nav a {
-            white-space: nowrap;
-        }
-
-        .sports-nav a:hover,
-        .sports-nav .active {
-            color: white;
-            font-weight: 700;
-        }
-
-        .sports-nav .home-label {
-            color: white;
-            font-weight: 700;
-        }
-
 
         /* =========================================================
            PORTFOLIO "SCORE CARDS"
@@ -237,20 +135,43 @@
         .highlights-bar {
             background: #10151b;
             padding: 12px 0 16px;
+            overflow: hidden;
         }
 
-        .highlight-scroll {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(220px, 1fr));
-            gap: 10px;
+        /*
+            Carousel is the "window" that the cards move through.
+        */
 
-            overflow-x: auto;
+        .carousel {
+            width: 100%;
+            overflow: hidden;
+        }
+
+
+        /*
+            Track contains BOTH copies of the cards.
+
+            It continuously moves to the left.
+        */
+
+        .carousel-track {
+            display: flex;
+
+            width: max-content;
+
+            gap: 12px;
+
+            animation: carousel-scroll 35s linear infinite;
+
+            will-change: transform;
         }
 
         .highlight-card {
-            min-width: 220px;
+            flex: 0 0 270px;
 
-            background: var(--panel);
+            width: 270px;
+
+            background: #151b22;
 
             border: 1px solid #242b34;
             border-radius: 11px;
@@ -286,6 +207,56 @@
         .highlight-meta {
             color: var(--muted);
             font-size: 0.78rem;
+        }
+
+        /* =========================================================
+        INFINITE ANIMATION
+
+        We have two identical sets of cards.
+
+        The animation moves exactly one set to the left.
+        When it resets, the duplicate is in exactly the same
+        position as the original, so you don't see the reset.
+        ========================================================= */
+
+        @keyframes carousel-scroll {
+
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                /*
+                    50% because the track contains
+                    two identical copies.
+                */
+
+                transform: translateX(calc(-50% - 6px));
+            }
+
+        }
+
+
+        /* =========================================================
+        OPTIONAL: PAUSE WHEN USER HOVERS
+        ========================================================= */
+
+        .carousel:hover .carousel-track {
+            animation-play-state: paused;
+        }
+
+
+        /* =========================================================
+        MOBILE
+        ========================================================= */
+
+        @media (max-width: 600px) {
+
+            .highlight-card {
+                flex-basis: 240px;
+                width: 240px;
+            }
+
         }
 
 
@@ -459,7 +430,7 @@
         .profile-content {
             background: #11161c;
 
-            padding: 34px 0 70px;
+            padding: 34px 0 40px;
         }
 
 
@@ -478,9 +449,24 @@
             margin-bottom: 14px;
         }
 
+        .section-title2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
         .section-divider {
             border-top: 1px solid var(--border);
             margin-bottom: 16px;
+        }
+
+        .project-roster-container {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+
+            padding: 35px 40px; 
         }
 
 
@@ -495,18 +481,15 @@
         }
 
         .bio-meta {
-            display: grid;
-            gap: 8px;
-
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            justify-content: flex-start;
             font-size: 0.92rem;
         }
 
         .bio-meta strong {
             color: #f2f2f2;
-        }
-
-        .bio-meta span {
-            color: #d4d7dc;
         }
 
         .bio-description {
@@ -531,14 +514,10 @@
 
         .roster-row {
             display: grid;
-            grid-template-columns: 60px 1.3fr 1fr auto;
-
-            gap: 18px;
-
+            grid-template-columns: 160px 1.1fr 1.5fr auto;
+            gap: 22px;
             align-items: center;
-
-            padding: 20px 10px;
-
+            padding: 22px 10px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -549,6 +528,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            justify-self: center;
 
             border-radius: 50%;
 
@@ -585,6 +565,41 @@
             font-weight: 700;
 
             white-space: nowrap;
+        }
+
+        /* =========================================================
+        PROJECT IMAGES
+        ========================================================= */
+
+        .project-image {
+            width: 100%;
+            min-width: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .project-image img {
+            display: block;
+
+            max-width: 100%;
+            max-height: 240px;
+            
+            width: auto;
+            height: auto;
+
+            object-fit: contain;
+            border-radius: 16px;
+            transition: transform 0.3s ease;
+            transform-origin: center left;
+            position: relative;
+            z-index: 5;
+        }
+
+        .project-image img:hover {
+            transform: scale(2.8);
+            z-index: 10;
         }
 
 
@@ -633,48 +648,194 @@
 
 
         /* =========================================================
+           RESUME / EXPERIENCE
+        ========================================================= */
+
+        .resume-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .resume-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 16px;
+            border: 1px solid var(--purple-light);
+            border-radius: 20px;
+            color: var(--purple-light);
+            font-size: 0.82rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .resume-download:hover {
+            background: var(--purple-light);
+            color: #111;
+        }
+
+        .resume-list {
+            border-top: 1px solid var(--border);
+        }
+
+        .resume-item {
+            display: grid;
+            grid-template-columns: 185px 1fr;
+            gap: 26px;
+            padding: 22px 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .resume-date {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .resume-role {
+            font-size: 0.98rem;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+
+        .resume-org {
+            color: var(--purple-light);
+            font-size: 0.84rem;
+            font-weight: 700;
+            margin-bottom: 9px;
+        }
+
+        .resume-item ul {
+            padding-left: 18px;
+            color: #d1d6dc;
+            font-size: 0.88rem;
+            line-height: 1.65;
+        }
+
+        .resume-item li + li {
+            margin-top: 5px;
+        }
+
+        .resume-subsection {
+            margin-top: 32px;
+        }
+
+        .resume-subsection h3 {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 10px;
+        }
+
+        .resume-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .resume-tag {
+            padding: 7px 11px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            color: #dfe3e8;
+            font-size: 0.78rem;
+        }
+
+        @media (max-width: 650px) {
+            .resume-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .resume-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+
+
+        /* =========================================================
            CONTACT
         ========================================================= */
 
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-
+            grid-template-columns: repeat(2, 1fr);
             gap: 14px;
         }
 
-        .contact-card {
-            display: block;
 
-            background: var(--panel);
+        /* =========================================================
+        CONTACT LINKS
+        ========================================================= */
 
-            border: 1px solid var(--border);
-            border-radius: 8px;
-
-            padding: 18px;
-
-            transition: background 0.2s ease;
+        .contact-link-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 28px;
+            width: 100%;
         }
 
-        .contact-card:hover {
-            background: var(--panel-light);
+        .contact-links-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 28px;
+            margin-top: 14px;
         }
 
-        .contact-card small {
-            display: block;
+        .contact-link-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
 
-            color: var(--muted);
+            padding: 11px 22px;
 
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            border: 2px solid #6f42c1;
+            border-radius: 25px;
 
-            font-size: 0.68rem;
+            background: transparent;
+            color: #6f42c1;
 
-            margin-bottom: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+
+            transition: all 0.2s ease;
         }
 
-        .contact-card strong {
+        .contact-link-button:hover {
+            background: #6f42c1;
             color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Email + Phone underneath */
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+
+            margin-top: 28px;
+
+            font-size: 16px;
+            color: #aeb6c5;
+        }
+
+
+        .contact-separator {
+            color: #7c3aed;
         }
 
 
@@ -716,6 +877,12 @@
 
         @media (max-width: 950px) {
 
+            .contact-links-row {
+                gap: 22px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
             .header-main {
                 grid-template-columns: auto 1fr;
             }
@@ -745,8 +912,41 @@
                 grid-template-columns: 1fr 1fr;
             }
 
-        }
+            .contact-link-grid {
+                flex-direction: column;
+                gap: 14px;
+            }   
+            
+            .contact-link-button {
+                min-width: 120px;
+                padding: 10px 18px;
+            }
 
+            .contact-info {
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 24px;
+            }
+
+            .contact-separator {
+                display: none;
+            }
+
+            .roster-row {
+                grid-template-columns: 140px 1fr;
+            }
+
+            .project-image {
+                width: 140px;
+                height: 140px;
+            }
+
+            .project-description,
+            .project-status {
+                grid-column: 2;
+            }
+
+        }
 
         @media (max-width: 650px) {
 
@@ -824,6 +1024,48 @@
                 flex-direction: column;
             }
 
+            .contact-link-grid {
+                flex-direction: column;
+                gap: 14px;
+
+                margin-top: 32px;
+            }
+
+            .contact-link-button {
+                min-width: 120px;
+                padding: 10px 18px;
+            }
+
+            .contact-info {
+                flex-direction: row;
+                gap: 8px;
+                margin-top: 24px;
+            }
+
+            .contact-separator {
+                display: none;
+            }
+
+            .roster-row {
+                display: block;
+
+                padding: 24px 0;
+            }
+
+            .project-image {
+                width: 100%;
+                max-width: none;
+                height: 100%;
+                margin-bottom: 16px;
+            }
+
+            .project-info {
+                margin-bottom: 12px;
+            }
+
+            .project-description {
+                margin-bottom: 12px;
+            }
         }
 
     </style>
@@ -842,85 +1084,21 @@
     <div class="container header-main">
 
         <div class="brand">
-            nicole/<span class="portfolio-word">portfolio</span>
+            NICOLE'S<span class="portfolio-word"> Project Portfolio</span>
         </div>
-
-
-        <form class="search">
-
-            <input
-                type="text"
-                placeholder="Search projects, skills, interests..."
-                aria-label="Search portfolio"
-            >
-
-            <button type="submit">
-                🔍
-            </button>
-
-        </form>
 
 
         <div class="top-links">
 
-            <a href="#about">
-                About
-            </a>
-
-            <a href="#projects">
-                Projects
-            </a>
-
-            <a href="#skills" class="active">
-                Portfolio
-            </a>
-
-            <a href="#contact" class="contact-button">
-                Contact
-            </a>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#skills">Skills</a>
+            <a href="#contact">Resume</a> 
+            <a href="#contact" class="contact-button">Contact</a>
 
         </div>
 
     </div>
-
-
-    <!-- SECONDARY NAV -->
-
-    <nav class="sports-nav">
-
-        <div class="container sports-nav-inner">
-
-            <span class="home-label">
-                NT
-            </span>
-
-            <a href="#about">
-                Profile
-            </a>
-
-            <a href="#projects">
-                Highlights
-            </a>
-
-            <a href="#skills">
-                Skills
-            </a>
-
-            <a href="#projects">
-                Projects
-            </a>
-
-            <a href="#experience">
-                Experience
-            </a>
-
-            <a href="#contact">
-                Contact
-            </a>
-
-        </div>
-
-    </nav>
 
 </header>
 
@@ -932,110 +1110,111 @@
 
 <section class="highlights-bar">
 
-    <div class="container highlight-scroll">
+    <div class="carousel">
+        <div class="carousel-track">
 
-
-        <div class="highlight-card">
-
-            <div class="highlight-accent"></div>
-
-            <div class="highlight-content">
-
-                <div class="highlight-label">
-                    FEATURED
+            <!-- ORIGINAL SET -->
+            <a href="#nba-prediction" class="highlight-card">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">MACHINE LEARNING</div>
+                    <div class="highlight-title">NBA Prediction Pipeline</div>
+                    <div class="highlight-meta">Walk-Forward Validation • Player Props</div>
                 </div>
+            </a>
 
-                <div class="highlight-title">
-                    Portfolio Website
+            <a href="#dfs-optimizer" class="highlight-card">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">OPTIMIZATION</div>
+                    <div class="highlight-title">NFL DFS Optimizer</div>
+                    <div class="highlight-meta">MILP • Salary & Roster Constraints</div>
                 </div>
+            </a>
 
-                <div class="highlight-meta">
-                    HTML • CSS • GitHub Pages
+            <a href="#tartan-database" class="highlight-card">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">DATA ENGINEERING</div>
+                    <div class="highlight-title">Tartan Athletics Database</div>
+                    <div class="highlight-meta">R Shiny • PostgreSQL • Automation</div>
                 </div>
+            </a>
 
-            </div>
+            <a href="#lineup-research" class="highlight-card">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">RESEARCH</div>
+                    <div class="highlight-title">Basketball Lineup Analysis</div>
+                    <div class="highlight-meta">Python • R • Nonparametric Testing</div>
+                </div>
+            </a>
+
+            <a href="#portfolio-project" class="highlight-card">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">FEATURED</div>
+                    <div class="highlight-title">Portfolio Website</div>
+                    <div class="highlight-meta">HTML • CSS • GitHub Pages</div>
+                </div>
+            </a>
+
+            <!-- DUPLICATE SET FOR SEAMLESS LOOP -->
+            <a href="#nba-prediction" class="highlight-card" aria-hidden="true">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">MACHINE LEARNING</div>
+                    <div class="highlight-title">NBA Prediction Pipeline</div>
+                    <div class="highlight-meta">Walk-Forward Validation • Player Props</div>
+                </div>
+            </a>
+
+            <a href="#dfs-optimizer" class="highlight-card" aria-hidden="true">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">OPTIMIZATION</div>
+                    <div class="highlight-title">NFL DFS Optimizer</div>
+                    <div class="highlight-meta">MILP • Salary & Roster Constraints</div>
+                </div>
+            </a>
+
+            <a href="#tartan-database" class="highlight-card" aria-hidden="true">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">DATA ENGINEERING</div>
+                    <div class="highlight-title">Tartan Athletics Database</div>
+                    <div class="highlight-meta">R Shiny • PostgreSQL • Automation</div>
+                </div>
+            </a>
+
+            <a href="#lineup-research" class="highlight-card" aria-hidden="true">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">RESEARCH</div>
+                    <div class="highlight-title">Basketball Lineup Analysis</div>
+                    <div class="highlight-meta">Python • R • Nonparametric Testing</div>
+                </div>
+            </a>
+
+            <a href="#portfolio-project" class="highlight-card" aria-hidden="true">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">FEATURED</div>
+                    <div class="highlight-title">Portfolio Website</div>
+                    <div class="highlight-meta">HTML • CSS • GitHub Pages</div>
+                </div>
+            </a>
 
         </div>
-
-
-        <div class="highlight-card">
-
-            <div class="highlight-accent"></div>
-
-            <div class="highlight-content">
-
-                <div class="highlight-label">
-                    ANALYTICS
-                </div>
-
-                <div class="highlight-title">
-                    Sports Analytics
-                </div>
-
-                <div class="highlight-meta">
-                    Basketball • Modeling
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="highlight-card">
-
-            <div class="highlight-accent"></div>
-
-            <div class="highlight-content">
-
-                <div class="highlight-label">
-                    DATA
-                </div>
-
-                <div class="highlight-title">
-                    Data Science
-                </div>
-
-                <div class="highlight-meta">
-                    Python • R • SQL
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="highlight-card">
-
-            <div class="highlight-accent"></div>
-
-            <div class="highlight-content">
-
-                <div class="highlight-label">
-                    CURRENT
-                </div>
-
-                <div class="highlight-title">
-                    Machine Learning
-                </div>
-
-                <div class="highlight-meta">
-                    Prediction • Research
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
 
 </section>
 
 
-
 <!-- =========================================================
      PURPLE BANNER
 ========================================================= -->
-
+<!-- 
 <section class="banner-area">
 
     <div class="container">
@@ -1062,7 +1241,7 @@
 
     </div>
 
-</section>
+</section> -->
 
 
 
@@ -1080,7 +1259,7 @@
             <!-- Replace with your own image -->
 
             <img
-                src="images/nicole.jpg"
+                src="images/headshot4.png"
                 alt="Nicole Timko headshot"
             >
 
@@ -1094,11 +1273,7 @@
             </div>
 
             <div class="player-subtitle">
-                Statistics & Machine Learning
-                &nbsp; • &nbsp;
-                Sports Analytics
-                &nbsp; • &nbsp;
-                Carnegie Mellon
+                B.S. Statistics & Machine Learning • Carnegie Mellon University • Women's Basketball Team Captain
             </div>
 
         </div>
@@ -1128,15 +1303,6 @@
         <a href="#skills">
             Skills
         </a>
-
-        <a href="#experience">
-            Experience
-        </a>
-
-        <a href="#contact">
-            Contact
-        </a>
-
     </div>
 
 </nav>
@@ -1157,419 +1323,235 @@
              BIO
         ====================================================== -->
 
-        <section
-            class="section-block"
-            id="about"
-        >
+        <section class="section-block" id="about">
 
-            <h2 class="section-title">
-                Bio
-            </h2>
-
+            <h2 class="section-title">Bio</h2>
             <div class="section-divider"></div>
-
 
             <div class="bio-grid">
 
-
                 <div class="bio-meta">
-
-                    <div>
-                        <strong>School:</strong>
-                        <span>
-                            Carnegie Mellon University
-                        </span>
-                    </div>
-
-                    <div>
-                        <strong>Major:</strong>
-                        <span>
-                            Statistics & Machine Learning
-                        </span>
-                    </div>
-
-                    <div>
-                        <strong>Focus:</strong>
-                        <span>
-                            Sports Analytics
-                        </span>
-                    </div>
-
-                    <div>
-                        <strong>Languages:</strong>
-                        <span>
-                            Python, R, SQL
-                        </span>
-                    </div>
-
+                    <div><strong>School:</strong> <span>Carnegie Mellon University</span></div>
+                    <div><strong>Degree:</strong> <span>B.S. Statistics & Machine Learning</span></div>
+                    <div><strong>Graduation:</strong> <span>May 2027</span></div>
+                    <div><strong>GPA:</strong> <span>3.87</span></div>
+                    <div><strong>Athletics:</strong> <span>Women's Varsity Basketball • Team Captain</span></div>
+                    <div><strong>Focus:</strong> <span>Machine Learning • Sports Analytics • Data Engineering</span></div>
                 </div>
 
-
                 <div class="bio-description">
-
-                    I am interested in using statistics,
-                    machine learning, and programming to answer
-                    real-world questions.
-
-                    My interests are especially centered around
-                    sports analytics, where I enjoy combining
-                    basketball knowledge with data analysis,
-                    predictive modeling, visualization,
-                    and software development.
-
-                    I enjoy working through the entire data science
-                    process, from gathering and cleaning data to
-                    creating models and communicating results.
-
+                    I am a Senior at Carnegie Mellon University studying Statistics and Machine Learning and am a member of the university's women's basketball team. I have a background in Computer Science, having 
+                    studied it for two years at Christopher Newport University before transferring to Carnegie Mellon. At CMU, I have spent the last three years studying statistics, machine learning, and related areas of data and computing.
+                    I have been an athlete my entire life, and that experience has led me to explore different areas of sports through data and technology.
+                    <br><br>
+                    My projects have given me experience with predictive modeling, optimization, data engineering, database development, HTML and web development, Shiny application, and sports analytics.
+                    A lot of my work has involved building the pieces around a model, not just the model itself. I have worked with raw sports data, designed databases to organize it, built pipelines to prepare
+                    it for analysis, and developed the models and optimzation methods that use it. I have also built web-based and Shiny applications to make the work accessible outside of analysis.
+                    Because I started in Computer Science before moving into Statistics and Machine Learning, I am interested in applying those skills across both software engineering and data focused roles.
+                    <br><br>
+                    As the captain of the women's basketball team at CMU and while also conducting research for my Head Coach and Strength and Conditioning Coaches has also shaped how I work with others. I have had to communicate performance and technical information
+                    to coaches and strength and conditioning staff, as well as work with teammates, mentor younger players, and make decisions as part of a team. These experiences have strengthened my ability to explain information clearly, listen to different perspectives, and work effectively with people from different backgrounds.
                 </div>
 
             </div>
 
         </section>
-
 
 
         <!-- =====================================================
              PROJECT ROSTER
         ====================================================== -->
 
-        <section
-            class="section-block"
-            id="projects"
-        >
+        <section class="section-block" id="projects">
+            <div class="project-roster-container">
 
-            <h2 class="section-title">
-                Project Roster
-            </h2>
+                <h2 class="section-title">Project Roster</h2>
 
+                <div class="roster-list">
 
-            <div class="roster-list">
+                    <article class="roster-row" id="nba-prediction">
+                        <div class="project-number">01</div>
+                        <!-- <div class="project-image">
+                            <img
+                                src="images/nba-prediction.png"
+                                alt="NBA Prediction Pipeline project"
+                            >
+                        </div> -->
+                        <div class="project-info">
+                            <div class="roster-project-name">NBA Prediction Pipeline</div>
+                            <div class="project-category">Machine Learning • BTASports</div>
+                        </div>
+                        <div class="project-description">
+                            Built a leakage-safe three-stage pipeline to predict player minutes, 11 player-prop outcomes, and game-level results using expanding-window walk-forward validation and calibration/error metrics.
+                        </div>
+                        <div class="project-status">Python • ML</div>
+                    </article>
 
-
-                <!-- PROJECT 1 -->
-
-                <article class="roster-row">
-
-
-                    <div class="project-number">
-                        01
-                    </div>
-
-
-                    <div>
-
-                        <div class="roster-project-name">
-
-                            <a href="#">
-                                Personal Portfolio Website
-                            </a>
-
+                    <article class="roster-row" id="dfs-optimizer">
+                        <!-- <div class="project-number">02</div> -->
+                        <div class="project-image">
+                            <img
+                                src="images/dfs-optimizer.png"
+                                alt="NFL Daily Fantasy Lineup Optimizer project"
+                            >
                         </div>
 
-                        <div class="project-category">
-                            Web Development
+                        <div class="project-info">
+                            <div class="roster-project-name">NFL Daily Fantasy Lineup Optimizer</div>
+                            <div class="project-category">Optimization • BTASports</div>
+                        </div>
+                        <div class="project-description">
+                            Built a mixed-integer linear programming optimizer for optimal NFL daily fantasy lineups under salary-cap, roster, and positional constraints across two contest formats.
+                        </div>
+                        <div class="project-status">MILP • Python</div>
+                    </article>
+
+                    <article class="roster-row" id="tartan-database">
+                        <!-- <div class="project-number">03</div> -->
+                        <div class="project-image">
+                            <img
+                                src="images/tartan-database.png"
+                                alt="Tartan Athletics Performance Database project"
+                            >
                         </div>
 
-                    </div>
+                        <div class="project-info">
+                            <div class="roster-project-name">Tartan Athletics Performance Database</div>
+                            <div class="project-category">Database Development • Carnegie Mellon</div>
+                        </div>
+                        <div class="project-description">
+                            Architected a performance-tracking system using R Shiny and PostgreSQL, including automated CSV standardization, a long-format SQL schema, name-error detection with Jaro-Winkler distance, and real-time CRUD operations.
+                        </div>
+                        <div class="project-status">R • SQL • Shiny</div>
+                    </article>
 
+                    <article class="roster-row" id="lineup-research">
+                        <!-- <div class="project-number">04</div> -->
+                        <div class="project-image">
+                            <img
+                                src="images/lineup-research.png"
+                                alt="Basketball Lineup Analytics Research project"
+                            >
+                        </div>
+                        <div class="project-info">
+                            <div class="roster-project-name">Basketball Lineup Analytics Research</div>
+                            <div class="project-category">Undergraduate Research • Carnegie Mellon</div>
+                        </div>
+                        <div class="project-description">
+                            Developed a reusable Python scraper and reproducible R analysis pipeline to evaluate 3-guard versus 4-guard lineups using lineup-level data, ECDF-based thresholds, and nonparametric tests.
+                        </div>
+                        <div class="project-status">Python • R</div>
+                    </article>
 
-                    <div class="project-description">
+                    <article class="roster-row" id="ftn-api">
+                        <div class="project-number">05</div>
+                        <!-- <div class="project-image">
+                            <img
+                                src="images/ftn-api.png"
+                                alt="FTN NBA API Data Engineering project"
+                            >
+                        </div> -->
+                        <div class="project-info">
+                            <div class="roster-project-name">FTN NBA API Data Engineering</div>
+                            <div class="project-category">Data Engineering</div>
+                        </div>
+                        <div class="project-description">
+                            Engineered an NBA dataset from nested API endpoints, validated cross-file consistency, and identified an upstream data inconsistency that was reported to the API owner for correction.
+                        </div>
+                        <div class="project-status">API • JSON</div>
+                    </article>
 
-                        Responsive portfolio designed around
-                        a professional sports-player profile.
-
-                    </div>
-
-
-                    <div class="project-status">
-                        HTML • CSS
-                    </div>
-
-                </article>
-
-
-
-                <!-- PROJECT 2 -->
-
-                <article class="roster-row">
-
-
-                    <div class="project-number">
-                        02
-                    </div>
-
-
-                    <div>
-
-                        <div class="roster-project-name">
-
-                            <a href="#">
-                                Sports Analytics Project
-                            </a>
-
+                    <article class="roster-row" id="portfolio-project">
+                        <!-- <div class="project-number">06</div> -->
+                        <div class="project-image">
+                            <img
+                                src="images/portfolio.png"
+                                alt="Personal Portfolio Website"
+                            >
                         </div>
 
-                        <div class="project-category">
-                            Basketball Analytics
+                        <div class="project-info">
+                            <div class="roster-project-name">Personal Portfolio Website</div>
+                            <div class="project-category">Web Development</div>
                         </div>
-
-                    </div>
-
-
-                    <div class="project-description">
-
-                        Future sports analytics project examining
-                        player or team performance using statistical
-                        modeling.
-
-                    </div>
-
-
-                    <div class="project-status">
-                        Coming Soon
-                    </div>
-
-                </article>
-
-
-
-                <!-- PROJECT 3 -->
-
-                <article class="roster-row">
-
-
-                    <div class="project-number">
-                        03
-                    </div>
-
-
-                    <div>
-
-                        <div class="roster-project-name">
-
-                            <a href="#">
-                                Machine Learning Project
-                            </a>
-
+                        <div class="project-description">
+                            Responsive personal portfolio inspired by a professional sports-player profile, built to showcase projects, experience, technical skills, and resume information.
                         </div>
-
-                        <div class="project-category">
-                            Data Science
-                        </div>
-
-                    </div>
-
-
-                    <div class="project-description">
-
-                        Future project using machine learning
-                        and statistical modeling to solve a
-                        predictive problem.
-
-                    </div>
-
-
-                    <div class="project-status">
-                        Coming Soon
-                    </div>
-
-                </article>
-
+                        <div class="project-status">HTML • CSS</div>
+                    </article>
+                </div>
             </div>
 
         </section>
-
 
 
         <!-- =====================================================
              SKILLS / CAREER STATS
         ====================================================== -->
 
-        <section
-            class="section-block"
-            id="skills"
-        >
-
-            <h2 class="section-title">
-                Career Stats
-            </h2>
-
-            <div class="section-divider"></div>
-
-
-            <div class="table-scroll">
-
-                <table class="stats-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Skill
-                            </th>
-
-                            <th>
-                                Category
-                            </th>
-
-                            <th>
-                                Experience
-                            </th>
-
-                            <th>
-                                Focus
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-
-                        <tr>
-
-                            <td class="skill-name">
-                                Python
-                            </td>
-
-                            <td>
-                                Programming
-                            </td>
-
-                            <td class="rating">
-                                Advanced
-                            </td>
-
-                            <td>
-                                Data Science / ML
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td class="skill-name">
-                                R
-                            </td>
-
-                            <td>
-                                Statistics
-                            </td>
-
-                            <td class="rating">
-                                Advanced
-                            </td>
-
-                            <td>
-                                Modeling / Visualization
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td class="skill-name">
-                                SQL
-                            </td>
-
-                            <td>
-                                Data
-                            </td>
-
-                            <td class="rating">
-                                Experienced
-                            </td>
-
-                            <td>
-                                Databases
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td class="skill-name">
-                                Machine Learning
-                            </td>
-
-                            <td>
-                                Modeling
-                            </td>
-
-                            <td class="rating">
-                                Experienced
-                            </td>
-
-                            <td>
-                                Prediction
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td class="skill-name">
-                                Sports Analytics
-                            </td>
-
-                            <td>
-                                Analytics
-                            </td>
-
-                            <td class="rating">
-                                Experienced
-                            </td>
-
-                            <td>
-                                Basketball
-                            </td>
-
-                        </tr>
-
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- =====================================================
-             EXPERIENCE
-        ====================================================== -->
-
-        <section
-            class="section-block"
-            id="experience"
-        >
-
-            <h2 class="section-title">
-                Experience
-            </h2>
-
-            <div class="section-divider"></div>
-
-
-            <div class="bio-description">
-
-                Add internships, research positions,
-                leadership roles, coursework, or other
-                professional experiences here.
-
-                You can also turn this into another
-                sports-style roster table with columns for
-                organization, role, year, and responsibilities.
-
+        <section class="section-block" id="skills">
+
+            <div class="project-roster-container">
+
+                <h2 class="section-title">Career Stats</h2>
+                <div class="section-divider"></div>
+
+                <div class="table-scroll">
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>Skill Area</th>
+                                <th>Tools / Methods</th>
+                                <th>Applied In</th>
+                                <th>Focus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="skill-name">Programming</td>
+                                <td>Python • R • SQL • Java • C</td>
+                                <td>Research, internships, coursework</td>
+                                <td class="rating">Technical Development</td>
+                            </tr>
+                            <tr>
+                                <td class="skill-name">Machine Learning</td>
+                                <td>Predictive Modeling • K-Means • Validation • Calibration</td>
+                                <td>NBA prediction • Bettor segmentation</td>
+                                <td class="rating">Prediction</td>
+                            </tr>
+                            <tr>
+                                <td class="skill-name">Optimization</td>
+                                <td>Mixed-Integer Linear Programming</td>
+                                <td>NFL DFS lineup optimizer</td>
+                                <td class="rating">Decision Models</td>
+                            </tr>
+                            <tr>
+                                <td class="skill-name">Data Engineering</td>
+                                <td>APIs • JSON • PostgreSQL • Data Validation • Pipelines</td>
+                                <td>FTN API • Tartan Athletics</td>
+                                <td class="rating">Data Systems</td>
+                            </tr>
+                            <tr>
+                                <td class="skill-name">Statistical Analysis</td>
+                                <td>Regression • Inference • Nonparametric Tests • ECDFs</td>
+                                <td>Basketball lineup research</td>
+                                <td class="rating">Analytics</td>
+                            </tr>
+                            <tr>
+                                <td class="skill-name">Visualization & Apps</td>
+                                <td>R Shiny • Data Visualization • Dashboard Development</td>
+                                <td>Athletics performance tracking system</td>
+                                <td class="rating">Communication</td>
+                            </tr>
+                            <tr>
+                                <td class="skill-name">Leadership</td>
+                                <td>Communication • Mentorship • Collaboration • Conflict Resolution</td>
+                                <td>CMU Women's Basketball</td>
+                                <td class="rating">Team Leadership</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </section>
@@ -1580,75 +1562,38 @@
              CONTACT
         ====================================================== -->
 
-        <section
-            class="section-block"
-            id="contact"
-        >
+        <section class="section-block" id="contact">
 
-            <h2 class="section-title">
-                Contact
-            </h2>
-
-            <div class="section-divider"></div>
-
-
-            <div class="contact-grid">
-
-
-                <a
-                    class="contact-card"
-                    href="mailto:YOUR_EMAIL@andrew.cmu.edu"
-                >
-
-                    <small>
-                        Email
-                    </small>
-
-                    <strong>
-                        YOUR_EMAIL@andrew.cmu.edu
-                    </strong>
-
-                </a>
-
-
-
-                <a
-                    class="contact-card"
-                    href="https://github.com/YOUR-USERNAME"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-
-                    <small>
+            <h2 class="section-title2">Contact Me</h2>
+            
+            <!-- Resume / GitHub / LinkedIn Buttons -->
+            <div class="contact-link-grid">
+                <div class="contact-links-row">
+                    <a class="contact-link-button" href="https://github.com/nicoletimko-rgb" target="_blank" rel="noopener noreferrer">
                         GitHub
-                    </small>
+                    </a>
 
-                    <strong>
-                        github.com/YOUR-USERNAME
-                    </strong>
-
-                </a>
-
-
-
-                <a
-                    class="contact-card"
-                    href="https://linkedin.com/in/YOUR-LINKEDIN"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-
-                    <small>
+                    <a class="contact-link-button" href="https://www.linkedin.com/in/nicole-timko-78a711345/" target="_blank" rel="noopener noreferrer">
                         LinkedIn
-                    </small>
+                    </a>
 
-                    <strong>
-                        LinkedIn Profile
-                    </strong>
+                    <a class="contact-link-button" href="Nicole_Timko_Resume_2026.docx" download>
+                        Resume
+                    </a>
+                </div>
+            </div>
 
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <a href="mailto:nicoletimko@comcast.net">
+                    nicoletimko@comcast.net
                 </a>
 
+                <span class="contact-separator">•</span>
 
+                <a href="tel:4846883366">
+                    484.688.3366
+                </a>
             </div>
 
         </section>
@@ -1656,7 +1601,6 @@
     </div>
 
 </main>
-
 
 
 <!-- =========================================================
@@ -1690,78 +1634,14 @@
             </a>.
 
             No Yahoo Sports code, logos, or proprietary
-            assets were used.
+            assets were used. Original layout/ some preliminary wording
+            created with ChatGPT.
 
         </div>
 
     </div>
 
 </footer>
-
-
-
-<script>
-
-    /* =========================================================
-       SIMPLE SEARCH
-       Searches visible text and jumps to matching section.
-    ========================================================= */
-
-    const searchForm =
-        document.querySelector(".search");
-
-    const searchInput =
-        document.querySelector(".search input");
-
-
-    searchForm.addEventListener(
-        "submit",
-        function(event) {
-
-            event.preventDefault();
-
-            const query =
-                searchInput
-                    .value
-                    .trim()
-                    .toLowerCase();
-
-
-            if (!query) {
-                return;
-            }
-
-
-            const sections =
-                document.querySelectorAll(
-                    ".section-block"
-                );
-
-
-            for (const section of sections) {
-
-                const text =
-                    section
-                        .innerText
-                        .toLowerCase();
-
-
-                if (text.includes(query)) {
-
-                    section.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start"
-                    });
-
-                    return;
-                }
-
-            }
-
-        }
-    );
-
-</script>
 
 
 </body>
