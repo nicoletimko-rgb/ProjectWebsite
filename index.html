@@ -557,10 +557,14 @@
             color: #d2d6db;
             font-size: 0.88rem;
         }
+        .status-link {
+            display: flex;
+            gap: 12px;
+            flex-direction: column;
+        }
 
         .project-status {
             color: var(--purple-light);
-
             font-size: 0.75rem;
             font-weight: 700;
 
@@ -792,6 +796,32 @@
             align-items: center;
             gap: 28px;
             margin-top: 14px;
+        }
+
+        .contact-link-button-small {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 8px 16px;
+
+            border: 2px solid #6f42c1;
+            border-radius: 25px;
+
+            background: transparent;
+            color: #6f42c1;
+
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.75rem;
+
+            transition: all 0.2s ease;
+        }
+
+        .contact-link-button-small:hover {
+            background: #6f42c1;
+            color: white;
+            transform: translateY(-2px);
         }
 
         .contact-link-button {
@@ -1336,7 +1366,7 @@
                     <div><strong>Graduation:</strong> <span>May 2027</span></div>
                     <div><strong>GPA:</strong> <span>3.87</span></div>
                     <div><strong>Athletics:</strong> <span>Women's Varsity Basketball • Team Captain</span></div>
-                    <div><strong>Focus:</strong> <span>Machine Learning • Sports Analytics • Data Engineering</span></div>
+                    <div><strong>Focus:</strong> <span>Machine Learning • Sports Analytics • Data Engineering • Software Engineering</span></div>
                 </div>
 
                 <div class="bio-description">
@@ -1422,7 +1452,12 @@
                         <div class="project-description">
                             Architected a performance-tracking system using R Shiny and PostgreSQL, including automated CSV standardization, a long-format SQL schema, name-error detection with Jaro-Winkler distance, and real-time CRUD operations.
                         </div>
-                        <div class="project-status">R • SQL • Shiny</div>
+                        <div class="status-link">
+                            <div class="project-status">R • SQL • Shiny</div>
+                            <a class="contact-link-button-small" href="https://github.com/nicoletimko-rgb/TartanAthletics" target="_blank" rel="noopener noreferrer">
+                                GitHub
+                            </a>
+                        </div>
                     </article>
 
                     <article class="roster-row" id="lineup-research">
@@ -1440,7 +1475,15 @@
                         <div class="project-description">
                             Developed a reusable Python scraper and reproducible R analysis pipeline to evaluate 3-guard versus 4-guard lineups using lineup-level data, ECDF-based thresholds, and nonparametric tests.
                         </div>
-                        <div class="project-status">Python • R</div>
+                        <div class="status-link">
+                            <div class="project-status">Python • R</div>
+                            <a class="contact-link-button-small" href="https://github.com/nicoletimko-rgb/SURAProject" target="_blank" rel="noopener noreferrer">
+                                GitHub
+                            </a>
+                            <a class="contact-link-button-small" href="https://docs.google.com/presentation/d/134PflpbRmmOBdUlD5v3C8K8SWjBRVpS-NHuXpFHukKQ/preview" target="_blank" rel="noopener noreferrer">
+                                Project Poster
+                            </a>
+                        </div>
                     </article>
 
                     <article class="roster-row" id="ftn-api">
@@ -1477,7 +1520,12 @@
                         <div class="project-description">
                             Responsive personal portfolio inspired by a professional sports-player profile, built to showcase projects, experience, technical skills, and resume information.
                         </div>
-                        <div class="project-status">HTML • CSS</div>
+                        <div class="status-link">
+                            <div class="project-status">HTML • CSS</div>
+                            <a class="contact-link-button-small" href="https://github.com/nicoletimko-rgb/CodingAI" target="_blank" rel="noopener noreferrer">
+                                GitHub
+                            </a>
+                        </div>
                     </article>
                 </div>
             </div>
@@ -1577,7 +1625,7 @@
                         LinkedIn
                     </a>
 
-                    <a class="contact-link-button" href="https://docs.google.com/document/d/10Wz1_Jg0MyrbR9wJ9H5nQg-5Y20OoIPc0VEaS-0JAhQ/export?format=pdf" download>
+                    <a class="contact-link-button" href="https://docs.google.com/document/d/10Wz1_Jg0MyrbR9wJ9H5nQg-5Y20OoIPc0VEaS-0JAhQ/preview" download>
                         Resume
                     </a>
                 </div>
