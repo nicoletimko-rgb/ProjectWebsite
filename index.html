@@ -15,6 +15,7 @@
         ========================================================= */
 
         :root {
+            /* Creates reusable CSS variables for the site colors. Anything written as var(--name) later pulls a value from here. */
             --bg: #10151b;
             --bg-dark: #0b1015;
             --panel: #151b22;
@@ -38,17 +39,20 @@
         ========================================================= */
 
         * {
+            /* Applies these reset rules to every element on the page so sizing and spacing behave consistently. */
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
         html {
+            /* Controls behavior of the overall HTML document, including smooth anchor scrolling and preventing sideways page overflow. */
             scroll-behavior: smooth;
             overflow-x: hidden;
         }
 
         body {
+            /* Sets the default font, background, text color, line spacing, and overflow behavior for everything visible on the page. */
             font-family: Courtier New, Tahoma, Verdana, sans-serif;
             background: var(--bg);
             color: var(--text);
@@ -57,16 +61,19 @@
         }
 
         a {
+            /* Sets the default appearance of all links so they inherit surrounding text color and do not show an underline unless another rule adds one. */
             color: inherit;
             text-decoration: none;
         }
 
         img {
+            /* Provides safe default image behavior: images become block elements and never grow wider than their container. */
             display: block;
             max-width: 100%;
         }
 
         .container {
+            /* Creates the reusable centered content wrapper and limits how wide page content can become on large screens. */
             width: min(1180px, 92%);
             margin: 0 auto;
         }
@@ -77,11 +84,13 @@
         ========================================================= */
 
         .site-header {
+            /* Styles the outer top header area with the dark background and bottom divider. */
             background: var(--bg-dark);
             border-bottom: 1px solid var(--border);
         }
 
         .header-main {
+            /* Lays out the site name and navigation next to each other and vertically centers them. */
             min-height: 66px;
             display: flex;
             justify-content: space-between;
@@ -93,6 +102,7 @@
         /* Brand: site title shown on the left side of the header. */
 
         .brand {
+            /* Styles the NICOLE PROJECT PORTFOLIO site title. */
             font-size: 1.65rem;
             font-weight: 800;
             letter-spacing: -1px;
@@ -100,12 +110,14 @@
         }
 
         .brand .portfolio-word {
+            /* Targets only the Portfolio portion of the brand name so it can use a softer color. */
             color: #b7b7bd;
         }
 
 
         /* Right navigation: quick links to major page sections. */
         .top-links {
+            /* Places the main navigation links in one flexible horizontal row with consistent spacing. */
             display: flex;
             align-items: center;
             gap: 20px;
@@ -116,6 +128,7 @@
         }
 
         .contact-button {
+            /* Turns the Contact navigation link into a rounded purple outlined button. */
             border: 2px solid var(--purple-light);
 
             padding: 8px 18px;
@@ -133,6 +146,7 @@
         ========================================================= */
 
         .highlights-bar {
+            /* Creates the strip that contains the moving project highlight cards and hides anything that moves outside it. */
             background: #10151b;
             padding: 12px 0 16px;
             overflow: hidden;
@@ -143,6 +157,7 @@
         */
 
         .carousel {
+            /* Acts as the visible window for the scrolling cards; overflow hidden clips cards outside the window. */
             width: 100%;
             overflow: hidden;
         }
@@ -155,6 +170,7 @@
         */
 
         .carousel-track {
+            /* Places all highlight cards in one long row and applies the continuous left-moving animation. */
             display: flex;
 
             width: max-content;
@@ -167,6 +183,7 @@
         }
 
         .highlight-card {
+            /* Sets the fixed card width, dark card background, border, rounded corners, and clipping for each carousel card. */
             flex: 0 0 270px;
 
             width: 270px;
@@ -180,15 +197,18 @@
         }
 
         .highlight-accent {
+            /* Creates the thin purple bar across the top of each highlight card. */
             height: 6px;
             background: var(--purple);
         }
 
         .highlight-content {
+            /* Adds interior spacing around the text inside each highlight card. */
             padding: 12px 14px 14px;
         }
 
         .highlight-label {
+            /* Styles the small uppercase-style category label at the top of a highlight card. */
             font-size: 0.68rem;
             color: #c9ced5;
 
@@ -198,6 +218,7 @@
         }
 
         .highlight-title {
+            /* Styles the main project title inside each highlight card. */
             font-size: 0.95rem;
             font-weight: 800;
 
@@ -205,6 +226,7 @@
         }
 
         .highlight-meta {
+            /* Styles the smaller muted tools/methods line inside each highlight card. */
             color: var(--muted);
             font-size: 0.78rem;
         }
@@ -220,12 +242,15 @@
         ========================================================= */
 
         @keyframes carousel-scroll {
+            /* Defines the beginning and ending positions of the carousel animation. */
 
             from {
+                /* The animation starts with the carousel track in its normal position. */
                 transform: translateX(0);
             }
 
             to {
+                /* The animation ends after shifting one complete copy of the card set left; the duplicate set makes the reset look seamless. */
                 /*
                     50% because the track contains
                     two identical copies.
@@ -242,6 +267,7 @@
         ========================================================= */
 
         .carousel:hover .carousel-track {
+            /* Pauses the carousel animation while a mouse is hovering over it so a desktop user can read or click a card. */
             animation-play-state: paused;
         }
 
@@ -251,8 +277,10 @@
         ========================================================= */
 
         @media (max-width: 600px) {
+            /* SMALL-SCREEN BREAKPOINT: adjusts the carousel cards when the viewport is 600px wide or smaller. */
 
             .highlight-card {
+                /* Sets the fixed card width, dark card background, border, rounded corners, and clipping for each carousel card. */
                 flex-basis: 240px;
                 width: 240px;
             }
@@ -265,12 +293,14 @@
         ========================================================= */
 
         .banner-area {
+            /* Styles the outer background and spacing around the optional banner area. */
             background: #0d1217;
 
             padding: 28px 0;
         }
 
         .banner {
+            /* Creates the purple gradient banner and arranges its left and right content using flexbox. */
             min-height: 92px;
 
             border-radius: 12px;
@@ -293,16 +323,19 @@
         }
 
         .banner h2 {
+            /* Styles headings that appear inside the banner. */
             font-size: 1.35rem;
             margin-bottom: 3px;
         }
 
         .banner p {
+            /* Styles supporting paragraph text inside the banner. */
             color: #e6dcff;
             font-size: 0.9rem;
         }
 
         .banner-badge {
+            /* Styles the large badge/text displayed on the right side of the banner. */
             font-size: 2rem;
             font-weight: 800;
             white-space: nowrap;
@@ -314,6 +347,7 @@
         ========================================================= */
 
         .player-header {
+            /* Creates the purple gradient profile header behind the headshot and name. */
             position: relative;
 
             background:
@@ -329,6 +363,7 @@
         }
 
         .player-header-inner {
+            /* Places the headshot and profile text in a horizontal row and vertically centers them. */
             min-height: 108px;
 
             display: flex;
@@ -337,6 +372,7 @@
         }
 
         .player-photo {
+            /* Creates the circular frame around the headshot and prevents the circle from shrinking. */
             width: 76px;
             height: 76px;
 
@@ -351,6 +387,7 @@
         }
 
         .player-photo img {
+            /* Makes the headshot completely fill its circular frame while cropping it cleanly. */
             width: 100%;
             height: 100%;
 
@@ -359,6 +396,7 @@
         }
 
         .player-name {
+            /* Styles the large uppercase name in the player header. */
             font-size: 1.5rem;
             font-weight: 800;
             text-transform: uppercase;
@@ -366,6 +404,7 @@
         }
 
         .player-subtitle {
+            /* Styles the smaller school/degree/team line under the name. */
             color: #eee9ff;
 
             font-size: 0.82rem;
@@ -378,11 +417,13 @@
         ========================================================= */
 
         .profile-tabs {
+            /* Creates the dark navigation strip underneath the player header. */
             background: #11161c;
             border-bottom: 1px solid var(--border);
         }
 
         .tabs-inner {
+            /* Places the Summary, Projects, and Skills tabs in a horizontal flex row. */
             display: flex;
             gap: 34px;
 
@@ -391,6 +432,7 @@
         }
 
         .tabs-inner a {
+            /* Styles each individual profile navigation tab. */
             position: relative;
 
             color: var(--muted);
@@ -402,14 +444,17 @@
         }
 
         .tabs-inner a:hover {
+            /* Changes a tab to white when a mouse is hovering over it. */
             color: white;
         }
 
         .tabs-inner a.active {
+            /* Keeps the currently active tab white. */
             color: white;
         }
 
         .tabs-inner a.active::after {
+            /* Draws the small purple underline beneath the active tab using a CSS pseudo-element. */
             content: "";
 
             position: absolute;
@@ -428,6 +473,7 @@
         ========================================================= */
 
         .profile-content {
+            /* Sets the background and vertical spacing for the main portfolio content area. */
             background: #11161c;
 
             padding: 34px 0 40px;
@@ -437,10 +483,12 @@
         /* Shared section heading styles used throughout the main content. */
 
         .section-block {
+            /* Adds consistent spacing below each major portfolio section. */
             margin-bottom: 50px;
         }
 
         .section-title {
+            /* Styles the small uppercase headings used for major content sections. */
             font-size: 0.95rem;
             font-weight: 800;
 
@@ -450,6 +498,7 @@
         }
 
         .section-title2 {
+            /* Styles and centers the larger Contact Me heading. */
             font-size: 1.3rem;
             font-weight: 800;
             text-transform: uppercase;
@@ -457,11 +506,13 @@
         }
 
         .section-divider {
+            /* Creates the thin horizontal line underneath section headings. */
             border-top: 1px solid var(--border);
             margin-bottom: 16px;
         }
 
         .project-roster-container {
+            /* Creates the subtle rounded translucent panel surrounding the Project Roster and Career Stats sections. */
             background: rgba(255, 255, 255, 0.025);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
@@ -475,12 +526,14 @@
         ========================================================= */
 
         .bio-grid {
+            /* Uses CSS Grid to place bio facts and the written bio side-by-side on larger screens. */
             display: grid;
             grid-template-columns: 1fr 1.4fr;
             gap: 50px;
         }
 
         .bio-meta {
+            /* Stacks the School, Degree, Graduation, GPA, Athletics, and Focus facts vertically. */
             display: flex;
             flex-direction: column;
             gap: 18px;
@@ -489,10 +542,12 @@
         }
 
         .bio-meta strong {
+            /* Makes the labels in the bio facts slightly brighter than their values. */
             color: #f2f2f2;
         }
 
         .bio-description {
+            /* Controls the color, size, and readability of the longer biography paragraph. */
             color: #d1d6dc;
 
             line-height: 1.75;
@@ -506,6 +561,7 @@
         ========================================================= */
 
         .roster-list {
+            /* Creates the project-list container and its top divider. */
             display: grid;
             gap: 0;
 
@@ -513,6 +569,7 @@
         }
 
         .roster-row {
+            /* Uses CSS Grid to arrange each project image/number, project info, description, and status/buttons into columns. */
             display: grid;
             grid-template-columns: 160px 1.1fr 1.5fr auto;
             gap: 22px;
@@ -522,6 +579,7 @@
         }
 
         .project-number {
+            /* Creates and centers the circular purple project-number badge used when a project does not have an image. */
             width: 44px;
             height: 44px;
 
@@ -541,28 +599,33 @@
 
         /* Project title; min-width rules elsewhere let long titles wrap safely. */
         .roster-project-name {
+            /* Styles each project title. */
             font-weight: 800;
             margin-bottom: 3px;
             overflow-wrap: anywhere;
         }
 
         .roster-project-name a:hover {
+            /* Changes linked project titles when hovered so users can tell they are clickable. */
             color: var(--blue-link);
         }
 
         .project-category {
+            /* Styles the smaller muted category/organization text below each project title. */
             color: var(--muted);
             font-size: 0.8rem;
         }
 
         /* Main project summary text. */
         .project-description {
+            /* Styles the longer project explanation and allows it to wrap naturally. */
             color: #d2d6db;
             font-size: 0.88rem;
             min-width: 0;
             overflow-wrap: anywhere;
         }
         .status-link {
+            /* Stacks the technology label and project action buttons vertically. */
             display: flex;
             gap: 12px;
             flex-direction: column;
@@ -570,6 +633,7 @@
 
         /* Compact technology label shown at the right/bottom of each project. */
         .project-status {
+            /* Styles the purple technology labels such as Python • ML. */
             color: var(--purple-light);
             font-size: 0.75rem;
             font-weight: 700;
@@ -581,6 +645,7 @@
         ========================================================= */
 
         .project-image {
+            /* Creates the layout box that centers each project screenshot without forcing the image itself into a fixed shape. */
             width: 100%;
             min-width: 0;
 
@@ -590,6 +655,7 @@
         }
 
         .project-image img {
+            /* Keeps project screenshots proportional, rounds their corners, and prepares them for the desktop hover enlargement. */
             display: block;
 
             max-width: 100%;
@@ -614,6 +680,7 @@
         ========================================================= */
 
         .stats-table {
+            /* Makes the Career Stats table fill its container and removes spacing between table borders. */
             width: 100%;
 
             border-collapse: collapse;
@@ -622,6 +689,7 @@
         }
 
         .stats-table th {
+            /* Styles the Career Stats column headings. */
             color: var(--muted);
 
             text-transform: uppercase;
@@ -635,6 +703,7 @@
         }
 
         .stats-table td {
+            /* Styles each Career Stats data cell and adds horizontal row dividers. */
             padding: 15px 12px;
 
             border-bottom: 1px solid var(--border);
@@ -643,11 +712,13 @@
         }
 
         .skill-name {
+            /* Makes the first column skill names bold and bright. */
             font-weight: 700;
             color: white;
         }
 
         .rating {
+            /* Highlights the Focus column in purple. */
             color: var(--purple-light);
             font-weight: 700;
         }
@@ -658,6 +729,7 @@
         ========================================================= */
 
         .resume-header {
+            /* Places a resume section heading and download button on the same row. */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -666,6 +738,7 @@
         }
 
         .resume-download {
+            /* Styles the resume download link as a rounded outlined button. */
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -680,15 +753,18 @@
         }
 
         .resume-download:hover {
+            /* Fills the resume button on hover to provide visual feedback. */
             background: var(--purple-light);
             color: #111;
         }
 
         .resume-list {
+            /* Adds the top divider above the resume experience list. */
             border-top: 1px solid var(--border);
         }
 
         .resume-item {
+            /* Uses a two-column grid for each resume date and its corresponding experience details. */
             display: grid;
             grid-template-columns: 185px 1fr;
             gap: 26px;
@@ -697,6 +773,7 @@
         }
 
         .resume-date {
+            /* Styles the date column in the resume section. */
             color: var(--muted);
             font-size: 0.78rem;
             font-weight: 700;
@@ -705,12 +782,14 @@
         }
 
         .resume-role {
+            /* Styles each resume position/job title. */
             font-size: 0.98rem;
             font-weight: 800;
             margin-bottom: 3px;
         }
 
         .resume-org {
+            /* Styles the organization name below a resume role. */
             color: var(--purple-light);
             font-size: 0.84rem;
             font-weight: 700;
@@ -718,6 +797,7 @@
         }
 
         .resume-item ul {
+            /* Controls indentation, color, size, and line spacing of resume bullet lists. */
             padding-left: 18px;
             color: #d1d6dc;
             font-size: 0.88rem;
@@ -725,14 +805,17 @@
         }
 
         .resume-item li + li {
+            /* Adds spacing only between consecutive resume bullets. */
             margin-top: 5px;
         }
 
         .resume-subsection {
+            /* Adds space above smaller subsections within the resume area. */
             margin-top: 32px;
         }
 
         .resume-subsection h3 {
+            /* Styles subsection headings within the resume area. */
             font-size: 0.82rem;
             text-transform: uppercase;
             letter-spacing: 0.6px;
@@ -740,12 +823,14 @@
         }
 
         .resume-tags {
+            /* Allows resume skill tags to wrap onto additional lines as needed. */
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
         }
 
         .resume-tag {
+            /* Styles each individual resume skill tag as a small rounded pill. */
             padding: 7px 11px;
             background: var(--panel);
             border: 1px solid var(--border);
@@ -755,12 +840,15 @@
         }
 
         @media (max-width: 650px) {
+            /* MOBILE BREAKPOINT: every rule inside this block overrides larger-screen styles when the viewport is 650px wide or smaller. */
             .resume-header {
+                /* Places a resume section heading and download button on the same row. */
                 align-items: flex-start;
                 flex-direction: column;
             }
 
             .resume-item {
+                /* Uses a two-column grid for each resume date and its corresponding experience details. */
                 grid-template-columns: 1fr;
                 gap: 8px;
                 padding-left: 0;
@@ -774,6 +862,7 @@
         ========================================================= */
 
         .contact-grid {
+            /* Creates a two-column grid for contact-related content on wider screens. */
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 14px;
@@ -785,6 +874,7 @@
         ========================================================= */
 
         .contact-link-grid {
+            /* Centers the group of Resume, GitHub, and LinkedIn buttons. */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -793,6 +883,7 @@
         }
 
         .contact-links-row {
+            /* Places the contact action buttons in a horizontal row on larger screens. */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -801,6 +892,7 @@
         }
 
         .contact-link-button-small {
+            /* Styles the smaller GitHub/Demo/Poster buttons shown beside projects. */
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -821,12 +913,14 @@
         }
 
         .contact-link-button-small:hover {
+            /* Fills a small project button purple and moves it slightly upward on mouse hover. */
             background: #6f42c1;
             color: white;
             transform: translateY(-2px);
         }
 
         .contact-link-button {
+            /* Styles the larger GitHub, LinkedIn, and Resume buttons in the Contact section. */
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -847,6 +941,7 @@
         }
 
         .contact-link-button:hover {
+            /* Fills a large contact button purple and moves it slightly upward on mouse hover. */
             background: #6f42c1;
             color: white;
             transform: translateY(-2px);
@@ -854,6 +949,7 @@
 
         /* Email + phone line displayed beneath the contact buttons. */
         .contact-info {
+            /* Places the email address and phone number together and centers them. */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -867,6 +963,7 @@
 
 
         .contact-separator {
+            /* Colors the dot between the email address and phone number purple. */
             color: #7c3aed;
         }
 
@@ -876,6 +973,7 @@
         ========================================================= */
 
         footer {
+            /* Styles the bottom credits area and separates it from the page with a top border. */
             background: var(--bg-dark);
 
             border-top: 1px solid var(--border);
@@ -888,6 +986,7 @@
         }
 
         .footer-inner {
+            /* Places copyright information and source/credit information side-by-side on larger screens. */
             display: flex;
             justify-content: space-between;
 
@@ -895,10 +994,12 @@
         }
 
         footer a {
+            /* Makes links in the footer purple so source credits are easy to identify. */
             color: var(--purple-light);
         }
 
         footer a:hover {
+            /* Underlines footer links when hovered. */
             text-decoration: underline;
         }
 
@@ -914,25 +1015,30 @@
            Applies at 950px and below.
         ------------------------- */
         @media (max-width: 950px) {
+            /* TABLET BREAKPOINT: every rule inside this block overrides the normal desktop layout when the viewport is 950px wide or smaller. */
 
             /* Give boxed sections a little less interior spacing. */
             .project-roster-container {
+                /* Creates the subtle rounded translucent panel surrounding the Project Roster and Career Stats sections. */
                 padding: 28px 26px;
                 border-radius: 20px;
             }
 
             /* Keep the header usable instead of removing navigation entirely. */
             .header-main {
+                /* Lays out the site name and navigation next to each other and vertically centers them. */
                 gap: 20px;
             }
 
             .top-links {
+                /* Places the main navigation links in one flexible horizontal row with consistent spacing. */
                 gap: 14px;
                 font-size: 0.82rem;
             }
 
             /* Stack the bio so both columns have enough reading width. */
             .bio-grid {
+                /* Uses CSS Grid to place bio facts and the written bio side-by-side on larger screens. */
                 grid-template-columns: 1fr;
                 gap: 28px;
             }
@@ -942,6 +1048,7 @@
                The description and status move beneath the project title.
             */
             .roster-row {
+                /* Uses CSS Grid to arrange each project image/number, project info, description, and status/buttons into columns. */
                 grid-template-columns: 140px minmax(0, 1fr);
                 gap: 18px 24px;
                 align-items: start;
@@ -949,11 +1056,13 @@
 
             .project-image,
             .project-number {
+                /* Creates and centers the circular purple project-number badge used when a project does not have an image. */
                 grid-column: 1;
                 grid-row: 1 / span 3;
             }
 
             .project-image {
+                /* Creates the layout box that centers each project screenshot without forcing the image itself into a fixed shape. */
                 width: 140px;
                 height: auto;
                 align-self: center;
@@ -963,26 +1072,31 @@
             .project-description,
             .project-status,
             .status-link {
+                /* Stacks the technology label and project action buttons vertically. */
                 grid-column: 2;
             }
 
             .status-link {
+                /* Stacks the technology label and project action buttons vertically. */
                 align-items: flex-start;
             }
 
             /* Resume entries gain more room for their text. */
             .resume-item {
+                /* Uses a two-column grid for each resume date and its corresponding experience details. */
                 grid-template-columns: 150px 1fr;
                 gap: 20px;
             }
 
             /* Contact buttons can wrap instead of forcing horizontal overflow. */
             .contact-links-row {
+                /* Places the contact action buttons in a horizontal row on larger screens. */
                 flex-wrap: wrap;
                 gap: 16px;
             }
 
             .contact-link-grid {
+                /* Centers the group of Resume, GitHub, and LinkedIn buttons. */
                 gap: 16px;
             }
         }
@@ -993,14 +1107,17 @@
            Applies at 650px and below.
         ------------------------- */
         @media (max-width: 650px) {
+            /* MOBILE BREAKPOINT: every rule inside this block overrides larger-screen styles when the viewport is 650px wide or smaller. */
 
             /* Slightly wider usable area on small screens. */
             .container {
+                /* Creates the reusable centered content wrapper and limits how wide page content can become on large screens. */
                 width: min(100% - 28px, 1180px);
             }
 
             /* Stack the brand above the navigation links. */
             .header-main {
+                /* Lays out the site name and navigation next to each other and vertically centers them. */
                 flex-direction: column;
                 align-items: center;
                 gap: 10px;
@@ -1008,6 +1125,7 @@
             }
 
             .brand {
+                /* Styles the NICOLE PROJECT PORTFOLIO site title. */
                 font-size: 1.35rem;
                 text-align: center;
                 white-space: normal;
@@ -1015,6 +1133,7 @@
 
             /* Keep navigation visible and allow it to wrap to a second line. */
             .top-links {
+                /* Places the main navigation links in one flexible horizontal row with consistent spacing. */
                 display: flex;
                 justify-content: center;
                 flex-wrap: wrap;
@@ -1023,37 +1142,44 @@
             }
 
             .contact-button {
+                /* Turns the Contact navigation link into a rounded purple outlined button. */
                 padding: 6px 12px;
             }
 
             /* Make carousel cards smaller so more context fits on screen. */
             .highlight-card {
+                /* Sets the fixed card width, dark card background, border, rounded corners, and clipping for each carousel card. */
                 flex-basis: 230px;
                 width: 230px;
             }
 
             /* Player header stays horizontal, but scales down cleanly. */
             .player-header-inner {
+                /* Places the headshot and profile text in a horizontal row and vertically centers them. */
                 min-height: 94px;
                 gap: 14px;
             }
 
             .player-photo {
+                /* Creates the circular frame around the headshot and prevents the circle from shrinking. */
                 width: 62px;
                 height: 62px;
             }
 
             .player-name {
+                /* Styles the large uppercase name in the player header. */
                 font-size: 1.15rem;
             }
 
             .player-subtitle {
+                /* Styles the smaller school/degree/team line under the name. */
                 font-size: 0.72rem;
                 line-height: 1.4;
             }
 
             /* Tabs remain on one line and can be swiped horizontally if needed. */
             .tabs-inner {
+                /* Places the Summary, Projects, and Skills tabs in a horizontal flex row. */
                 min-height: 58px;
                 gap: 6px;
                 overflow-x: auto;
@@ -1061,6 +1187,7 @@
             }
 
             .tabs-inner a {
+                /* Styles each individual profile navigation tab. */
                 flex: 0 0 auto;
                 white-space: nowrap;
                 font-size: 0.85rem;
@@ -1068,20 +1195,24 @@
             }
 
             .profile-content {
+                /* Sets the background and vertical spacing for the main portfolio content area. */
                 padding-top: 26px;
             }
 
             .section-block {
+                /* Adds consistent spacing below each major portfolio section. */
                 margin-bottom: 38px;
             }
 
             .project-roster-container {
+                /* Creates the subtle rounded translucent panel surrounding the Project Roster and Career Stats sections. */
                 padding: 24px 18px;
                 border-radius: 18px;
             }
 
             /* Stack each project vertically for easy reading on phones. */
             .roster-row {
+                /* Uses CSS Grid to arrange each project image/number, project info, description, and status/buttons into columns. */
                 display: flex;
                 flex-direction: column;
                 align-items: stretch;
@@ -1090,18 +1221,21 @@
             }
 
             .project-image {
+                /* Creates the layout box that centers each project screenshot without forcing the image itself into a fixed shape. */
                 width: min(100%, 320px);
                 height: auto;
                 margin: 0 auto 6px;
             }
 
             .project-image img {
+                /* Keeps project screenshots proportional, rounds their corners, and prepares them for the desktop hover enlargement. */
                 max-height: 220px;
                 margin: 0 auto;
                 transform-origin: center;
             }
 
             .project-number {
+                /* Creates and centers the circular purple project-number badge used when a project does not have an image. */
                 align-self: flex-start;
                 width: 40px;
                 height: 40px;
@@ -1111,14 +1245,17 @@
             .project-description,
             .project-status,
             .status-link {
+                /* Stacks the technology label and project action buttons vertically. */
                 width: 100%;
             }
 
             .project-description {
+                /* Styles the longer project explanation and allows it to wrap naturally. */
                 line-height: 1.6;
             }
 
             .status-link {
+                /* Stacks the technology label and project action buttons vertically. */
                 flex-direction: row;
                 flex-wrap: wrap;
                 align-items: center;
@@ -1127,11 +1264,13 @@
 
             /* Resume entries become a simple vertical list. */
             .resume-header {
+                /* Places a resume section heading and download button on the same row. */
                 align-items: flex-start;
                 flex-direction: column;
             }
 
             .resume-item {
+                /* Uses a two-column grid for each resume date and its corresponding experience details. */
                 grid-template-columns: 1fr;
                 gap: 8px;
                 padding-left: 0;
@@ -1143,6 +1282,7 @@
                data-label attributes in the HTML supply each field label.
             */
             .table-scroll {
+                /* Styles the element(s) matched by `.table-scroll`. The declarations below override or add to any earlier rules for the same elements. */
                 overflow: visible;
             }
 
@@ -1150,11 +1290,13 @@
             .stats-table tbody,
             .stats-table tr,
             .stats-table td {
+                /* Styles each Career Stats data cell and adds horizontal row dividers. */
                 display: block;
                 width: 100%;
             }
 
             .stats-table thead {
+                /* Styles the element(s) matched by `.stats-table thead`. The declarations below override or add to any earlier rules for the same elements. */
                 position: absolute;
                 width: 1px;
                 height: 1px;
@@ -1167,11 +1309,13 @@
             }
 
             .stats-table tr {
+                /* Styles the element(s) matched by `.stats-table tr`. The declarations below override or add to any earlier rules for the same elements. */
                 padding: 14px 0;
                 border-bottom: 1px solid var(--border);
             }
 
             .stats-table td {
+                /* Styles each Career Stats data cell and adds horizontal row dividers. */
                 display: grid;
                 grid-template-columns: minmax(92px, 0.7fr) minmax(0, 1.6fr);
                 gap: 12px;
@@ -1181,6 +1325,7 @@
             }
 
             .stats-table td::before {
+                /* Styles the element(s) matched by `.stats-table td::before`. The declarations below override or add to any earlier rules for the same elements. */
                 content: attr(data-label);
                 color: var(--muted);
                 font-size: 0.68rem;
@@ -1191,6 +1336,7 @@
             /* Contact elements stack without squeezing phone numbers or email. */
             .contact-link-grid,
             .contact-links-row {
+                /* Places the contact action buttons in a horizontal row on larger screens. */
                 flex-direction: column;
                 align-items: center;
                 width: 100%;
@@ -1198,10 +1344,12 @@
             }
 
             .contact-link-button {
+                /* Styles the larger GitHub, LinkedIn, and Resume buttons in the Contact section. */
                 width: min(100%, 260px);
             }
 
             .contact-info {
+                /* Places the email address and phone number together and centers them. */
                 flex-direction: column;
                 gap: 7px;
                 margin-top: 24px;
@@ -1210,11 +1358,13 @@
             }
 
             .contact-separator {
+                /* Colors the dot between the email address and phone number purple. */
                 display: none;
             }
 
             /* Footer credit text becomes a single readable column. */
             .footer-inner {
+                /* Places copyright information and source/credit information side-by-side on larger screens. */
                 flex-direction: column;
                 gap: 14px;
             }
@@ -1227,7 +1377,9 @@
            This prevents sticky hover/overlap behavior on touchscreens.
         ------------------------- */
         @media (hover: hover) and (pointer: fine) and (min-width: 951px) {
+            /* Applies the enclosed hover-only effects only to devices that actually have a mouse/trackpad-style hover capability; this avoids awkward zoom behavior on touchscreens. */
             .project-image img:hover {
+                /* Enlarges a project screenshot when a desktop mouse hovers over it. */
                 transform: scale(2.1);
                 z-index: 10;
             }
@@ -1235,7 +1387,9 @@
 
         /* Disable the old scale-up behavior on touch and smaller devices. */
         @media (hover: none), (pointer: coarse), (max-width: 950px) {
+            /* TABLET BREAKPOINT: every rule inside this block overrides the normal desktop layout when the viewport is 950px wide or smaller. */
             .project-image img:hover {
+                /* Enlarges a project screenshot when a desktop mouse hovers over it. */
                 transform: none;
             }
         }
@@ -1246,17 +1400,21 @@
            Respect users who ask their operating system to reduce animation.
         ------------------------- */
         @media (prefers-reduced-motion: reduce) {
+            /* ACCESSIBILITY: these overrides run when a user has asked their device/browser to reduce animation and motion. */
             html {
+                /* Controls behavior of the overall HTML document, including smooth anchor scrolling and preventing sideways page overflow. */
                 scroll-behavior: auto;
             }
 
             .carousel-track {
+                /* Places all highlight cards in one long row and applies the continuous left-moving animation. */
                 animation: none;
             }
 
             .project-image img,
             .contact-link-button,
             .contact-link-button-small {
+                /* Styles the smaller GitHub/Demo/Poster buttons shown beside projects. */
                 transition: none;
             }
         }

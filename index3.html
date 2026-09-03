@@ -90,7 +90,7 @@
         }
 
 
-        /* Brand */
+        /* Brand: site title shown on the left side of the header. */
 
         .brand {
             font-size: 1.65rem;
@@ -104,7 +104,7 @@
         }
 
 
-        /* Right navigation */
+        /* Right navigation: quick links to major page sections. */
         .top-links {
             display: flex;
             align-items: center;
@@ -434,7 +434,7 @@
         }
 
 
-        /* Section label */
+        /* Shared section heading styles used throughout the main content. */
 
         .section-block {
             margin-bottom: 50px;
@@ -539,9 +539,11 @@
             font-weight: 800;
         }
 
+        /* Project title; min-width rules elsewhere let long titles wrap safely. */
         .roster-project-name {
             font-weight: 800;
             margin-bottom: 3px;
+            overflow-wrap: anywhere;
         }
 
         .roster-project-name a:hover {
@@ -553,9 +555,12 @@
             font-size: 0.8rem;
         }
 
+        /* Main project summary text. */
         .project-description {
             color: #d2d6db;
             font-size: 0.88rem;
+            min-width: 0;
+            overflow-wrap: anywhere;
         }
         .status-link {
             display: flex;
@@ -563,12 +568,12 @@
             flex-direction: column;
         }
 
+        /* Compact technology label shown at the right/bottom of each project. */
         .project-status {
             color: var(--purple-light);
             font-size: 0.75rem;
             font-weight: 700;
-
-            white-space: nowrap;
+            white-space: normal;
         }
 
         /* =========================================================
@@ -601,10 +606,7 @@
             z-index: 5;
         }
 
-        .project-image img:hover {
-            transform: scale(2.8);
-            z-index: 10;
-        }
+        /* Screenshot hover scaling is enabled only for desktop pointers below. */
 
 
         /* =========================================================
@@ -850,7 +852,7 @@
             transform: translateY(-2px);
         }
 
-        /* Email + Phone underneath */
+        /* Email + phone line displayed beneath the contact buttons. */
         .contact-info {
             display: flex;
             justify-content: center;
@@ -902,199 +904,360 @@
 
 
         /* =========================================================
-           MOBILE
+           RESPONSIVE DESIGN
+           These breakpoints adapt the same desktop layout for
+           tablets and phones instead of relying on fixed widths.
         ========================================================= */
 
+        /* -------------------------
+           TABLET / SMALL LAPTOP
+           Applies at 950px and below.
+        ------------------------- */
         @media (max-width: 950px) {
 
-            .contact-links-row {
-                gap: 22px;
-                flex-direction: column;
-                align-items: flex-start;
+            /* Give boxed sections a little less interior spacing. */
+            .project-roster-container {
+                padding: 28px 26px;
+                border-radius: 20px;
             }
 
+            /* Keep the header usable instead of removing navigation entirely. */
             .header-main {
-                grid-template-columns: auto 1fr;
+                gap: 20px;
             }
 
             .top-links {
-                display: none;
+                gap: 14px;
+                font-size: 0.82rem;
             }
 
-            .highlight-scroll {
-                grid-template-columns: repeat(4, 250px);
-            }
-
+            /* Stack the bio so both columns have enough reading width. */
             .bio-grid {
                 grid-template-columns: 1fr;
+                gap: 28px;
             }
 
+            /*
+               Project rows use an image/number column plus a content column.
+               The description and status move beneath the project title.
+            */
             .roster-row {
-                grid-template-columns: 50px 1fr;
+                grid-template-columns: 140px minmax(0, 1fr);
+                gap: 18px 24px;
+                align-items: start;
             }
 
-            .project-description,
-            .project-status {
-                grid-column: 2;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .contact-link-grid {
-                flex-direction: column;
-                gap: 14px;
-            }   
-            
-            .contact-link-button {
-                min-width: 120px;
-                padding: 10px 18px;
-            }
-
-            .contact-info {
-                flex-direction: column;
-                gap: 8px;
-                margin-top: 24px;
-            }
-
-            .contact-separator {
-                display: none;
-            }
-
-            .roster-row {
-                grid-template-columns: 140px 1fr;
+            .project-image,
+            .project-number {
+                grid-column: 1;
+                grid-row: 1 / span 3;
             }
 
             .project-image {
                 width: 140px;
-                height: 140px;
+                height: auto;
+                align-self: center;
             }
 
+            .project-info,
             .project-description,
-            .project-status {
+            .project-status,
+            .status-link {
                 grid-column: 2;
             }
 
+            .status-link {
+                align-items: flex-start;
+            }
+
+            /* Resume entries gain more room for their text. */
+            .resume-item {
+                grid-template-columns: 150px 1fr;
+                gap: 20px;
+            }
+
+            /* Contact buttons can wrap instead of forcing horizontal overflow. */
+            .contact-links-row {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .contact-link-grid {
+                gap: 16px;
+            }
         }
 
+
+        /* -------------------------
+           MOBILE
+           Applies at 650px and below.
+        ------------------------- */
         @media (max-width: 650px) {
 
+            /* Slightly wider usable area on small screens. */
+            .container {
+                width: min(100% - 28px, 1180px);
+            }
+
+            /* Stack the brand above the navigation links. */
             .header-main {
-                display: flex;
                 flex-direction: column;
-                align-items: stretch;
-
-                gap: 12px;
-
+                align-items: center;
+                gap: 10px;
                 padding: 14px 0;
             }
 
             .brand {
+                font-size: 1.35rem;
                 text-align: center;
+                white-space: normal;
             }
 
-            .search {
-                max-width: none;
+            /* Keep navigation visible and allow it to wrap to a second line. */
+            .top-links {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 8px 14px;
+                font-size: 0.78rem;
             }
 
-            .sports-nav-inner {
-                gap: 18px;
+            .contact-button {
+                padding: 6px 12px;
             }
 
-            .banner {
-                flex-direction: column;
-                align-items: flex-start;
-
-                padding: 20px;
+            /* Make carousel cards smaller so more context fits on screen. */
+            .highlight-card {
+                flex-basis: 230px;
+                width: 230px;
             }
 
+            /* Player header stays horizontal, but scales down cleanly. */
             .player-header-inner {
-                min-height: 95px;
+                min-height: 94px;
+                gap: 14px;
             }
 
             .player-photo {
-                width: 64px;
-                height: 64px;
+                width: 62px;
+                height: 62px;
             }
 
             .player-name {
-                font-size: 1.25rem;
+                font-size: 1.15rem;
             }
 
-            .tabs-inner {
-                gap: 8px;
+            .player-subtitle {
+                font-size: 0.72rem;
+                line-height: 1.4;
+            }
 
+            /* Tabs remain on one line and can be swiped horizontally if needed. */
+            .tabs-inner {
+                min-height: 58px;
+                gap: 6px;
                 overflow-x: auto;
+                scrollbar-width: thin;
             }
 
             .tabs-inner a {
+                flex: 0 0 auto;
                 white-space: nowrap;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
+                padding: 0 10px 11px;
             }
 
+            .profile-content {
+                padding-top: 26px;
+            }
+
+            .section-block {
+                margin-bottom: 38px;
+            }
+
+            .project-roster-container {
+                padding: 24px 18px;
+                border-radius: 18px;
+            }
+
+            /* Stack each project vertically for easy reading on phones. */
             .roster-row {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 24px 0;
+            }
+
+            .project-image {
+                width: min(100%, 320px);
+                height: auto;
+                margin: 0 auto 6px;
+            }
+
+            .project-image img {
+                max-height: 220px;
+                margin: 0 auto;
+                transform-origin: center;
+            }
+
+            .project-number {
+                align-self: flex-start;
+                width: 40px;
+                height: 40px;
+            }
+
+            .project-info,
+            .project-description,
+            .project-status,
+            .status-link {
+                width: 100%;
+            }
+
+            .project-description {
+                line-height: 1.6;
+            }
+
+            .status-link {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px;
+            }
+
+            /* Resume entries become a simple vertical list. */
+            .resume-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .resume-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
                 padding-left: 0;
                 padding-right: 0;
             }
 
-            .stats-table {
-                min-width: 620px;
-            }
-
+            /*
+               Turn the four-column skills table into readable mobile cards.
+               data-label attributes in the HTML supply each field label.
+            */
             .table-scroll {
-                overflow-x: auto;
+                overflow: visible;
             }
 
-            .contact-grid {
-                grid-template-columns: 1fr;
+            .stats-table,
+            .stats-table tbody,
+            .stats-table tr,
+            .stats-table td {
+                display: block;
+                width: 100%;
             }
 
-            .footer-inner {
+            .stats-table thead {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+            }
+
+            .stats-table tr {
+                padding: 14px 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .stats-table td {
+                display: grid;
+                grid-template-columns: minmax(92px, 0.7fr) minmax(0, 1.6fr);
+                gap: 12px;
+                padding: 6px 0;
+                border: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .stats-table td::before {
+                content: attr(data-label);
+                color: var(--muted);
+                font-size: 0.68rem;
+                font-weight: 800;
+                text-transform: uppercase;
+            }
+
+            /* Contact elements stack without squeezing phone numbers or email. */
+            .contact-link-grid,
+            .contact-links-row {
                 flex-direction: column;
-            }
-
-            .contact-link-grid {
-                flex-direction: column;
-                gap: 14px;
-
-                margin-top: 32px;
+                align-items: center;
+                width: 100%;
+                gap: 12px;
             }
 
             .contact-link-button {
-                min-width: 120px;
-                padding: 10px 18px;
+                width: min(100%, 260px);
             }
 
             .contact-info {
-                flex-direction: row;
-                gap: 8px;
+                flex-direction: column;
+                gap: 7px;
                 margin-top: 24px;
+                text-align: center;
+                overflow-wrap: anywhere;
             }
 
             .contact-separator {
                 display: none;
             }
 
-            .roster-row {
-                display: block;
+            /* Footer credit text becomes a single readable column. */
+            .footer-inner {
+                flex-direction: column;
+                gap: 14px;
+            }
+        }
 
-                padding: 24px 0;
+
+        /* -------------------------
+           POINTER / HOVER SUPPORT
+           Only enlarge screenshots on devices with a real hover pointer.
+           This prevents sticky hover/overlap behavior on touchscreens.
+        ------------------------- */
+        @media (hover: hover) and (pointer: fine) and (min-width: 951px) {
+            .project-image img:hover {
+                transform: scale(2.1);
+                z-index: 10;
+            }
+        }
+
+        /* Disable the old scale-up behavior on touch and smaller devices. */
+        @media (hover: none), (pointer: coarse), (max-width: 950px) {
+            .project-image img:hover {
+                transform: none;
+            }
+        }
+
+
+        /* -------------------------
+           ACCESSIBILITY: REDUCED MOTION
+           Respect users who ask their operating system to reduce animation.
+        ------------------------- */
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
             }
 
-            .project-image {
-                width: 100%;
-                max-width: none;
-                height: 100%;
-                margin-bottom: 16px;
+            .carousel-track {
+                animation: none;
             }
 
-            .project-info {
-                margin-bottom: 12px;
-            }
-
-            .project-description {
-                margin-bottom: 12px;
+            .project-image img,
+            .contact-link-button,
+            .contact-link-button-small {
+                transition: none;
             }
         }
 
@@ -1111,6 +1274,7 @@
 
 <header class="site-header">
 
+    <!-- Centers the header content and keeps it within the site max width. -->
     <div class="container header-main">
 
         <div class="brand">
@@ -1140,7 +1304,9 @@
 
 <section class="highlights-bar">
 
+    <!-- The outer carousel hides cards once they move outside the viewport. -->
     <div class="carousel">
+        <!-- The track contains two matching card sets for a seamless loop. -->
         <div class="carousel-track">
 
             <!-- ORIGINAL SET -->
@@ -1199,7 +1365,7 @@
             </a>
 
             <!-- DUPLICATE SET FOR SEAMLESS LOOP -->
-            <a href="#nba-prediction" class="highlight-card" aria-hidden="true">
+            <a href="#nba-prediction" class="highlight-card" aria-hidden="true" tabindex="-1">
                 <div class="highlight-accent"></div>
                 <div class="highlight-content">
                     <div class="highlight-label">MACHINE LEARNING</div>
@@ -1208,7 +1374,7 @@
                 </div>
             </a>
 
-            <a href="#dfs-optimizer" class="highlight-card" aria-hidden="true">
+            <a href="#dfs-optimizer" class="highlight-card" aria-hidden="true" tabindex="-1">
                 <div class="highlight-accent"></div>
                 <div class="highlight-content">
                     <div class="highlight-label">OPTIMIZATION</div>
@@ -1217,7 +1383,7 @@
                 </div>
             </a>
 
-            <a href="#tartan-database" class="highlight-card" aria-hidden="true">
+            <a href="#tartan-database" class="highlight-card" aria-hidden="true" tabindex="-1">
                 <div class="highlight-accent"></div>
                 <div class="highlight-content">
                     <div class="highlight-label">DATA ENGINEERING</div>
@@ -1226,7 +1392,7 @@
                 </div>
             </a>
 
-            <a href="#lineup-research" class="highlight-card" aria-hidden="true">
+            <a href="#lineup-research" class="highlight-card" aria-hidden="true" tabindex="-1">
                 <div class="highlight-accent"></div>
                 <div class="highlight-content">
                     <div class="highlight-label">RESEARCH</div>
@@ -1235,12 +1401,22 @@
                 </div>
             </a>
 
-            <a href="#portfolio-project" class="highlight-card" aria-hidden="true">
+            <a href="#portfolio-project" class="highlight-card" aria-hidden="true" tabindex="-1">
                 <div class="highlight-accent"></div>
                 <div class="highlight-content">
                     <div class="highlight-label">FEATURED</div>
                     <div class="highlight-title">Portfolio Website</div>
                     <div class="highlight-meta">HTML • CSS • GitHub Pages</div>
+                </div>
+            </a>
+
+            <!-- Duplicate of Space Invaders so the second carousel set exactly matches the first. -->
+            <a href="#spaceinvaders" class="highlight-card" aria-hidden="true" tabindex="-1">
+                <div class="highlight-accent"></div>
+                <div class="highlight-content">
+                    <div class="highlight-label">SOFTWARE ENGINEERING</div>
+                    <div class="highlight-title">Space Invaders Video Game</div>
+                    <div class="highlight-meta">Java • GUI Development • OOP</div>
                 </div>
             </a>
 
@@ -1258,6 +1434,7 @@
 
 <section class="player-header">
 
+    <!-- Compact profile identity row: headshot, name, and summary. -->
     <div class="container player-header-inner">
 
 
@@ -1297,6 +1474,7 @@
 
 <nav class="profile-tabs">
 
+    <!-- Anchor links jump to the corresponding sections on this single page. -->
     <div class="container tabs-inner">
 
         <a href="#about" class="active">
@@ -1352,7 +1530,7 @@
                     I have been an athlete my entire life, and that experience has led me to explore different areas of sports through data and technology.
                     <br><br>
                     My projects have involved building the pieces around a model, not just the model itself. I have worked with raw sports data, designed databases to organize it, built pipelines to prepare
-                    it for analysis, and developed the models and optimzation methods that use it. I have also built web-based and Shiny applications to make the work accessible outside of analysis.
+                    it for analysis, and developed the models and optimization methods that use it. I have also built web-based and Shiny applications to make the work accessible outside of analysis.
                     Because I started in Computer Science before moving into Statistics and Machine Learning, I am interested in applying those skills across both software engineering and data focused roles.
                 </div>
 
@@ -1372,6 +1550,7 @@
 
                 <div class="roster-list">
 
+                    <!-- Project 1: machine-learning pipeline for NBA predictions. -->
                     <article class="roster-row" id="nba-prediction">
                         <div class="project-number">01</div>
                         <!-- <div class="project-image">
@@ -1390,6 +1569,7 @@
                         <div class="project-status">Python • ML</div>
                     </article>
 
+                    <!-- Project 2: NFL daily-fantasy lineup optimization. -->
                     <article class="roster-row" id="dfs-optimizer">
                         <!-- <div class="project-number">02</div> -->
                         <div class="project-image">
@@ -1409,6 +1589,7 @@
                         <div class="project-status">MILP • Python</div>
                     </article>
 
+                    <!-- Project 3: R Shiny + PostgreSQL athletics performance system. -->
                     <article class="roster-row" id="tartan-database">
                         <!-- <div class="project-number">03</div> -->
                         <div class="project-image">
@@ -1433,6 +1614,7 @@
                         </div>
                     </article>
 
+                    <!-- Project 4: Java/Swing Space Invaders software project. -->
                     <article class="roster-row" id="spaceinvaders">
                         <!-- <div class="project-number">06</div> -->
                         <div class="project-image">
@@ -1460,6 +1642,7 @@
                         </div>
                     </article>
 
+                    <!-- Project 5: undergraduate basketball lineup analytics research. -->
                     <article class="roster-row" id="lineup-research">
                         <!-- <div class="project-number">04</div> -->
                         <div class="project-image">
@@ -1486,6 +1669,7 @@
                         </div>
                     </article>
 
+                    <!-- Project 6: NBA API ingestion and validation/data-engineering work. -->
                     <article class="roster-row" id="ftn-api">
                         <div class="project-number">05</div>
                         <!-- <div class="project-image">
@@ -1509,6 +1693,7 @@
                         </div>
                     </article>
 
+                    <!-- Project 7: this responsive portfolio website. -->
                     <article class="roster-row" id="portfolio-project">
                         <!-- <div class="project-number">06</div> -->
                         <div class="project-image">
@@ -1549,6 +1734,7 @@
                 <h2 class="section-title">Career Stats</h2>
                 <div class="section-divider"></div>
 
+                <!-- Desktop: normal table. Mobile: CSS converts rows into labeled cards. -->
                 <div class="table-scroll">
                     <table class="stats-table">
                         <thead>
@@ -1561,52 +1747,52 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="skill-name">Programming</td>
-                                <td>Python • R • SQL • Java • C</td>
-                                <td>Research • Internships • Software Projects</td>
-                                <td class="rating">Technical Development</td>
+                                <td class="skill-name" data-label="Skill Area">Programming</td>
+                                <td data-label="Tools / Methods">Python • R • SQL • Java • C</td>
+                                <td data-label="Applied In">Research • Internships • Software Projects</td>
+                                <td class="rating" data-label="Focus">Technical Development</td>
                             </tr>
                             <tr>
-                                <td class="skill-name">Machine Learning</td>
-                                <td>Predictive Modeling • K-Means • Classification • Validation • Calibration</td>
-                                <td>NBA prediction • Bettor segmentation</td>
-                                <td class="rating">Prediction</td>
+                                <td class="skill-name" data-label="Skill Area">Machine Learning</td>
+                                <td data-label="Tools / Methods">Predictive Modeling • K-Means • Classification • Validation • Calibration</td>
+                                <td data-label="Applied In">NBA prediction • Bettor segmentation</td>
+                                <td class="rating" data-label="Focus">Prediction</td>
                             </tr>
                             <tr>
-                                <td class="skill-name">Optimization</td>
-                                <td>Mixed-Integer Linear Programming</td>
-                                <td>NFL DFS lineup optimizer</td>
-                                <td class="rating">Decision Models</td>
+                                <td class="skill-name" data-label="Skill Area">Optimization</td>
+                                <td data-label="Tools / Methods">Mixed-Integer Linear Programming</td>
+                                <td data-label="Applied In">NFL DFS lineup optimizer</td>
+                                <td class="rating" data-label="Focus">Decision Models</td>
                             </tr>
                             <tr>
-                                <td class="skill-name">Data Engineering</td>
-                                <td>APIs • JSON • PostgreSQL • Data Validation • Pipelines</td>
-                                <td>FTN API • Tartan Athletics</td>
-                                <td class="rating">Data Systems</td>
+                                <td class="skill-name" data-label="Skill Area">Data Engineering</td>
+                                <td data-label="Tools / Methods">APIs • JSON • PostgreSQL • Data Validation • Pipelines</td>
+                                <td data-label="Applied In">FTN API • Tartan Athletics</td>
+                                <td class="rating" data-label="Focus">Data Systems</td>
                             </tr>
                             <tr>
-                                <td class="skill-name">Statistical Analysis</td>
-                                <td>Regression • Inference • Nonparametric Tests • ECDFs</td>
-                                <td>Basketball lineup research</td>
-                                <td class="rating">Analytics</td>
+                                <td class="skill-name" data-label="Skill Area">Statistical Analysis</td>
+                                <td data-label="Tools / Methods">Regression • Inference • Nonparametric Tests • ECDFs</td>
+                                <td data-label="Applied In">Basketball lineup research</td>
+                                <td class="rating" data-label="Focus">Analytics</td>
                             </tr>
                             <tr>
-                                <td class="skill-name">Visualization & Apps</td>
-                                <td>R Shiny • Swing • Data Visualization • Dashboard Development</td>
-                                <td>Athletics performance tracking system</td>
-                                <td class="rating">Communication</td>
+                                <td class="skill-name" data-label="Skill Area">Visualization &amp; Apps</td>
+                                <td data-label="Tools / Methods">R Shiny • Swing • Data Visualization • Dashboard Development</td>
+                                <td data-label="Applied In">Athletics performance tracking system</td>
+                                <td class="rating" data-label="Focus">Communication</td>
                             </tr>
                             <tr>
-                                <td class="skill-name">Software Development</td>
-                                <td>OOP • Event-Driven Programming • GUI Development</td>
-                                <td>Space Invaders</td>
-                                <td class="rating">Application Development</td>
+                                <td class="skill-name" data-label="Skill Area">Software Development</td>
+                                <td data-label="Tools / Methods">OOP • Event-Driven Programming • GUI Development</td>
+                                <td data-label="Applied In">Space Invaders</td>
+                                <td class="rating" data-label="Focus">Application Development</td>
                             </tr>
                             <tr>
-                                <td class="skill-name">Leadership</td>
-                                <td>Communication • Mentorship • Collaboration • Conflict Resolution</td>
-                                <td>CMU Women's Basketball</td>
-                                <td class="rating">Team Leadership</td>
+                                <td class="skill-name" data-label="Skill Area">Leadership</td>
+                                <td data-label="Tools / Methods">Communication • Mentorship • Collaboration • Conflict Resolution</td>
+                                <td data-label="Applied In">CMU Women's Basketball</td>
+                                <td class="rating" data-label="Focus">Team Leadership</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1636,7 +1822,7 @@
                         LinkedIn
                     </a>
 
-                    <a class="contact-link-button" href="https://docs.google.com/document/d/10Wz1_Jg0MyrbR9wJ9H5nQg-5Y20OoIPc0VEaS-0JAhQ/preview?tab=t.0" download>
+                    <a class="contact-link-button" href="https://docs.google.com/document/d/10Wz1_Jg0MyrbR9wJ9H5nQg-5Y20OoIPc0VEaS-0JAhQ/preview" download>
                         Resume
                     </a>
                 </div>
@@ -1678,23 +1864,14 @@
 
         <div>
 
+            <!-- Credits for outside visual inspiration and third-party imagery. -->
             Website designed and developed by Nicole Timko.
-
-            Visual layout inspired by professional
-            sports roster and player profile pages,
-            particularly
-
-            <a
-                href="https://sports.yahoo.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Yahoo Sports
-            </a>.
-
-            No Yahoo Sports code, logos, or proprietary
-            assets were used. Original layout/ some preliminary wording
-            created with ChatGPT.
+            Visual layout inspired by professional sports roster and player profile pages, particularly
+            <a href="https://sports.yahoo.com/" target="_blank" rel="noopener noreferrer">Yahoo Sports</a>.
+            The NFL DFS project uses a DraftKings lineup image;
+            <a href="https://cdn.fantasypros.com/wp-content/uploads/3-W9-DK-QB.png" target="_blank" rel="noopener noreferrer">image source / credit</a>.
+            No Yahoo Sports code, logos, or proprietary assets were used.
+            Original layout and some preliminary wording were created with ChatGPT.
 
         </div>
 
