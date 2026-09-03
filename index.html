@@ -78,7 +78,6 @@
             margin: 0 auto;
         }
 
-
         /* =========================================================
            TOP HEADER
         ========================================================= */
@@ -410,63 +409,6 @@
             font-size: 0.82rem;
             margin-top: 2px;
         }
-
-
-        /* =========================================================
-           PROFILE NAV TABS
-        ========================================================= */
-
-        .profile-tabs {
-            /* Creates the dark navigation strip underneath the player header. */
-            background: #11161c;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tabs-inner {
-            /* Places the Summary, Projects, and Skills tabs in a horizontal flex row. */
-            display: flex;
-            gap: 34px;
-
-            min-height: 70px;
-            align-items: flex-end;
-        }
-
-        .tabs-inner a {
-            /* Styles each individual profile navigation tab. */
-            position: relative;
-
-            color: var(--muted);
-
-            font-size: 1rem;
-            font-weight: 700;
-
-            padding: 0 12px 13px;
-        }
-
-        .tabs-inner a:hover {
-            /* Changes a tab to white when a mouse is hovering over it. */
-            color: white;
-        }
-
-        .tabs-inner a.active {
-            /* Keeps the currently active tab white. */
-            color: white;
-        }
-
-        .tabs-inner a.active::after {
-            /* Draws the small purple underline beneath the active tab using a CSS pseudo-element. */
-            content: "";
-
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-
-            height: 3px;
-
-            background: var(--purple-light);
-        }
-
 
         /* =========================================================
            MAIN PROFILE CONTENT
@@ -1630,25 +1572,6 @@
      PROFILE TABS
 ========================================================= -->
 
-<nav class="profile-tabs">
-
-    <!-- Anchor links jump to the corresponding sections on this single page. -->
-    <div class="container tabs-inner">
-
-        <a href="#about" class="active">
-            Summary
-        </a>
-
-        <a href="#projects">
-            Projects
-        </a>
-
-        <a href="#skills">
-            Skills
-        </a>
-    </div>
-
-</nav>
 
 
 
@@ -1668,7 +1591,7 @@
 
         <section class="section-block" id="about">
 
-            <h2 class="section-title">Bio</h2>
+            <h2 class="section-title">About</h2>
             <div class="section-divider"></div>
 
             <div class="bio-grid">
@@ -1821,7 +1744,7 @@
                             <a class="contact-link-button-small" href="https://github.com/nicoletimko-rgb/SURAProject" target="_blank" rel="noopener noreferrer">
                                 GitHub
                             </a>
-                            <a class="contact-link-button-small" href="https://docs.google.com/presentation/d/134PflpbRmmOBdUlD5v3C8K8SWjBRVpS-NHuXpFHukKQ/preview" target="_blank" rel="noopener noreferrer">
+                            <a class="contact-link-button-small" href=poster.pdf target="_blank" rel="noopener noreferrer">
                                 Project Poster
                             </a>
                         </div>
@@ -1980,7 +1903,7 @@
                         LinkedIn
                     </a>
 
-                    <a class="contact-link-button" href="https://docs.google.com/document/d/10Wz1_Jg0MyrbR9wJ9H5nQg-5Y20OoIPc0VEaS-0JAhQ/preview" download>
+                    <a class="contact-link-button" href=resume.pdf target="_blank" rel="noopener noreferrer">
                         Resume
                     </a>
                 </div>
