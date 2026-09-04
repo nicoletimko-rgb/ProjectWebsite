@@ -357,10 +357,9 @@
         ========================================================= */
 
         .profile-content {
-            /* Main black background. The purple circles are layered above this background. */
-            position: relative;
-            overflow: hidden;
+            /* Sets the background and vertical spacing for the main portfolio content area. */
             background: #11161c;
+
             padding: 34px 0 40px;
         }
 
@@ -398,8 +397,8 @@
 
         .project-roster-container {
             /* Creates the subtle rounded translucent panel surrounding the Project Roster and Career Stats sections. */
-            background: rgba(255, 255, 255, 0.035);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
 
             padding: 35px 40px; 
@@ -741,169 +740,6 @@
         footer a:hover {
             /* Underlines footer links when hovered. */
             text-decoration: underline;
-        }
-
-
-
-
-        /* =========================================================
-           FLOATING BACKGROUND CIRCLES
-           Large, soft purple circles overlap and drift behind the
-           page content. Their edges fade into the black background.
-        ========================================================= */
-
-        .background-shapes {
-            /* Sits above the main black background but below all portfolio content. */
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .background-shape {
-            /* Every decorative shape is a true circle. */
-            position: absolute;
-            display: block;
-            aspect-ratio: 1 / 1;
-            border-radius: 50%;
-
-            /* A radial gradient removes the obvious outline by fading the circle outward. */
-            background: radial-gradient(
-                circle,
-                rgba(123, 77, 255, 0.15) 0%,
-                rgba(123, 77, 255, 0.10) 42%,
-                rgba(123, 77, 255, 0.045) 68%,
-                rgba(123, 77, 255, 0) 100%
-            );
-
-            /* Extra blur helps overlapping circles blend together instead of looking outlined. */
-            filter: blur(14px);
-            will-change: transform;
-        }
-
-        .shape-1 {
-            width: 480px;
-            top: 5%;
-            left: -150px;
-            animation: float-one 14s ease-in-out infinite;
-        }
-
-        .shape-2 {
-            width: 420px;
-            top: 24%;
-            left: 12%;
-            animation: float-two 16s ease-in-out infinite;
-        }
-
-        .shape-3 {
-            width: 540px;
-            top: 43%;
-            right: -180px;
-            background: radial-gradient(
-                circle,
-                rgba(169, 140, 255, 0.14) 0%,
-                rgba(123, 77, 255, 0.09) 45%,
-                rgba(123, 77, 255, 0.04) 70%,
-                rgba(123, 77, 255, 0) 100%
-            );
-            animation: float-three 18s ease-in-out infinite;
-        }
-
-        .shape-4 {
-            width: 460px;
-            top: 61%;
-            left: -80px;
-            animation: float-four 15s ease-in-out infinite;
-        }
-
-        .shape-5 {
-            width: 500px;
-            top: 72%;
-            right: 4%;
-            background: radial-gradient(
-                circle,
-                rgba(169, 140, 255, 0.12) 0%,
-                rgba(123, 77, 255, 0.08) 45%,
-                rgba(123, 77, 255, 0.035) 72%,
-                rgba(123, 77, 255, 0) 100%
-            );
-            animation: float-five 17s ease-in-out infinite;
-        }
-
-        .shape-6 {
-            width: 440px;
-            top: 14%;
-            right: -100px;
-            animation: float-six 19s ease-in-out infinite;
-        }
-
-        .shape-7 {
-            width: 520px;
-            top: 50%;
-            left: 24%;
-            animation: float-seven 20s ease-in-out infinite;
-        }
-
-        .shape-8 {
-            width: 470px;
-            top: 84%;
-            left: -110px;
-            animation: float-eight 16s ease-in-out infinite;
-        }
-
-        @keyframes float-one {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(170px, 80px) scale(1.08); }
-            66% { transform: translate(75px, 190px) scale(0.96); }
-        }
-
-        @keyframes float-two {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            30% { transform: translate(150px, -95px) scale(1.10); }
-            65% { transform: translate(260px, 55px) scale(0.98); }
-        }
-
-        @keyframes float-three {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            35% { transform: translate(-190px, 95px) scale(1.07); }
-            70% { transform: translate(-75px, -120px) scale(0.95); }
-        }
-
-        @keyframes float-four {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            40% { transform: translate(180px, -120px) scale(1.10); }
-            72% { transform: translate(290px, 50px) scale(0.97); }
-        }
-
-        @keyframes float-five {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            32% { transform: translate(-155px, -120px) scale(1.11); }
-            68% { transform: translate(-260px, 70px) scale(0.96); }
-        }
-
-        @keyframes float-six {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            38% { transform: translate(-175px, 125px) scale(1.08); }
-            75% { transform: translate(-70px, 235px) scale(0.97); }
-        }
-
-        @keyframes float-seven {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            34% { transform: translate(135px, -130px) scale(1.08); }
-            70% { transform: translate(-95px, -220px) scale(0.96); }
-        }
-
-        @keyframes float-eight {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            36% { transform: translate(190px, -95px) scale(1.10); }
-            72% { transform: translate(280px, 80px) scale(0.97); }
-        }
-
-        /* The content inside the main section stays above the decorative circles. */
-        .profile-content > .container {
-            position: relative;
-            z-index: 2;
         }
 
 
@@ -1274,10 +1110,6 @@
                 /* Styles the smaller GitHub/Demo/Poster buttons shown beside projects. */
                 transition: none;
             }
-
-            .background-shape {
-                animation: none;
-            }
         }
 
     </style>
@@ -1499,18 +1331,6 @@
 ========================================================= -->
 
 <main class="profile-content">
-
-    <!-- Decorative purple shapes: above the black background, below all portfolio content. -->
-    <div class="background-shapes" aria-hidden="true">
-        <span class="background-shape shape-1"></span>
-        <span class="background-shape shape-2"></span>
-        <span class="background-shape shape-3"></span>
-        <span class="background-shape shape-4"></span>
-        <span class="background-shape shape-5"></span>
-        <span class="background-shape shape-6"></span>
-        <span class="background-shape shape-7"></span>
-        <span class="background-shape shape-8"></span>
-    </div>
 
     <div class="container">
 
