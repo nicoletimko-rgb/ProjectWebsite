@@ -1,0 +1,215 @@
+https://chatgpt.com/share/6a9773a1-f690-83ea-a947-2783679a7414
+
+Prompt 1:
+can you give me an html to make a website that: Build and deploy a complete, professional portfolio website that meets the following requirements (at a minimum):
+Content Requirements
+About You: Include your bio, photo, interests, and skills. Make it personal and engaging.
+Projects: Showcase your work. Start with placeholders for future projects, but include this portfolio project itself.
+Contact Information: Provide ways for visitors to reach you (email, GitHub, LinkedIn, etc.)
+Use a clean, modern design that's easy to read and navigate
+Be sure to properly credit any sources for images or text or templates you use
+Technical Requirements
+Responsive Design: Must work well on desktop, tablet, and mobile devices
+Live Deployment: Hosted on GitHub Pages with a working URL
+Code Quality: Code should be well-structured and readable by someone with your level of experience -> and that looks like a sports roster online page( like: https://sports.yahoo.com/nfl/teams/?guccounter=1) and include creditting where get inspo from
+Response 1:
+
+Below is a complete single-file index.html you can start with. You only need an images folder containing your photo.
+
+I created the images folder and placed the images I wanted to include inside it
+
+Prompt 2: (the website was light theme and not the correct color scheme or layout I wanted)
+
+can you match the color scheme more of yahoo sports site. please make design similar to this but make my project profolio like a sports "roster"/ player info page feel. 
+
+Response 2:
+Here's a fully updated version with the Yahoo Sports-inspired purple/black/white color scheme, a cleaner sports-profile layout, responsive design, project placeholders, contact links, and attribution built in.
+
+Prompt 3:
+
+Can you help me make a carousel out of the portfolio score cards at the top?
+
+Response 3:
+
+Yes — and you only need to change three things: the HTML wrapper, the CSS, and add a little JavaScript. Replace your current CSS with this: …
+
+Prompt 4:
+
+I want the carousel to be automatic sliding
+
+Response 4: 
+
+then you can keep the cards exactly as they are and just auto-scroll the container with JavaScript.
+Add this right before </body>: …
+Changed speed to carousel-scroll 35s linear infinite;
+Made duplicate set to loop through
+Prompt 5:
+if i click on one of the cards will it take me to project section?
+Response 5:
+Not with the current code, because each .highlight-card is a <div>. But you can make each card clickable so it smoothly jumps down to the corresponding project.
+Since your project section already has:
+<section class="section-block" id="projects">
+Change a card from: 
+<div class="highlight-card"> 
+<div class="highlight-accent"></div> 
+TO
+<a href="#projects" class="highlight-card"> 
+<div class="highlight-accent"></div> 
+<div class="highlight-content">
+AND
+Change the specific projects to have ID too:
+<article class="roster-row" id="portfolio-project">
+Did this for #nba-prediction, dfs-optimizer, tartan-database, lineup-research, portfolio-project, spaceinvaders
+Prompt 6:
+
+Add my resume to the website: *uploaded resume.pdf*
+
+Prompt 7:
+
+I added your resume into the site in two ways: I replaced the placeholder Experience section with your actual BTASports, FTN API, Tartan Athletics Analytics, and SURA experience, and I added a dedicated Resume section with education, basketball leadership, technical skills, honors, and a Download Resume button. Those details come directly from your uploaded resume.
+I also added Resume to both navigation bars in your existing portfolio structure.
+I removed the experience, skills, and education sections to just keep about, projects, and contact
+https://chatgpt.com/share/6a97738a-8c18-83e9-b5bb-5e852946eda7
+Prompt 8:
+can you make download resume, click github and click linkedin in a row below contact info with purple circles like resume is rn: <section class="section-block" id="contact"> <h2 class="section-title">Contact</h2> <div class="section-divider"></div> <div class="contact-grid"> <a class="contact-card" href="mailto:nicoletimko@comcast.net"> <small>Email</small> <strong>nicoletimko@comcast.net</strong> </a> <a class="contact-card" href="tel:4846883366"> <small>Phone</small> <strong>484.688.3366</strong> </a> <a class="contact-card" href="https://github.com/nicoletimko-rgb" target="_blank" rel="noopener noreferrer"> <small>GitHub</small> <strong>Click to View GitHub</strong> </a> <a class="contact-card" href="https://www.linkedin.com/in/nicole-timko-78a711345/" target="_blank" rel="noopener noreferrer"> <small>LinkedIn</small> <strong>Click to View LinkedIn</strong> </a> <a class="resume-download" href="Nicole_Timko_Resume_2026.docx" download> Download Resume </a> </div> </section>
+Response 8:
+Yes. The cleanest setup is to keep Email + Phone as the contact cards, then put Resume + GitHub + LinkedIn in one centered row underneath, all using the same purple-circle style.
+Replace your contact section with: … then add this CSS: …
+This created a new .contact-links-row/ .contact-link-button class and separated divider between contact card and the buttons. I created two separate grids for these rows
+Prompt 9:
+I want the cards and button links centered on th page
+The key part is:
+max-width: 820px;
+margin: 0 auto;
+That makes the contact grid 820px wide and centers that entire block.
+Then:
+justify-content: center;
+centers your GitHub / LinkedIn / Resume row underneath it.
+Prompt 10:
+Copied code I just added and asked to adjust for mobile and tablet devices
+Response 10:
+ Gave me the code
+Prompt 11:
+can i change email and phone to be just written under the contact links?
+Response 11:
+Yes — I think that would look cleaner. You can have the three purple buttons centered first, then a simple Email and Phone line underneath.
+<!-- Contact Information --> <div class="contact-info"> <a href="mailto:nicoletimko@comcast.net"> nicoletimko@comcast.net </a> <span class="contact-separator">•</span> <a href="tel:4846883366"> 484.688.3366 </a> </div>
+Add change your CSS to: …
+Replaced old contact-grid to contact-info
+Prompt 12:
+Why is there a gap between my School, Degree, Graduation, etc in the About section?
+
+Response 12:
+
+Yes — the gap is coming from .bio-meta being a grid.
+Your .bio-grid has two columns, and the right column (.bio-description) is much taller. CSS Grid makes the left .bio-meta stretch to the same height as the right column. Since .bio-meta is itself a grid, its rows are being distributed across all that extra height.
+Change:
+.bio-meta {
+    display: grid;
+    font-size: 0.92rem;
+}
+to:
+.bio-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    justify-content: flex-start;
+
+    font-size: 0.92rem;
+}
+
+Prompt 13:
+how do i make nicoleportfolio on left and rest on right?
+
+Response 13:
+Yes — if you're talking about your navigation bar, where you want:
+NicolePortfolio                         About  Experience  Projects  Contact
+the easiest way is to make the navbar a flex container with justify-content: space-between.
+Changed header-main to include justify-content: space-between;
+
+Prompt 14:
+why does it let me slide left and right on my webpage?
+
+Response 14:
+
+If you mean the entire webpage can scroll horizontally left/right, something on the page is wider than the browser viewport.
+Given the changes you just made, I'd first check your header. This can happen if .header-main has width: 100% plus padding.
+Remove width: 100% from header-main
+Also overflow-x: hidden in body
+
+
+
+https://chatgpt.com/c/6a9858e9-8374-83e9-ab44-bcc91952f6b8
+
+Other additions:
+
+Added space invaders project, description, github link, etc 
+Added images to project rows 
+Replaced class=”project-number” with class=”project-image”
+
+Prompt 15:
+
+can I make the images not an exact size but max width and height but take shape of png given
+
+Response 15:
+
+let each PNG keep its natural aspect ratio instead of forcing every image into the same square.
+
+For example, structure each row like this: … and CSS lik …
+
+I would actually go one step further and remove the fixed height on .project-image too, because your screenshot shows exactly why a fixed square container can look awkward. Use…
+
+Prompt 16: 
+ 
+How do I make the image not overlap the text?
+
+Response 16:
+
+Yes — the issue is that the image is allowed to grow wider than the image column, so it spills into your text column.
+Since you want the PNG to keep its natural shape without overlapping the text, let the grid column constrain its width.
+Added max-width to project-image img. Then made width and height auto
+
+Prompt 17:
+
+If i want to hover over image and it be bigger, how would i do that
+
+Response 17:
+
+Yes. You can use a CSS :hover effect with transform: scale().
+For your project images, add: … 
+I chose to make the scale 2.1
+Since you don't want the enlarged image covering your project text, make it expand primarily toward the left:
+Transform-origin: center left:
+Prompt 18:
+what is z index and transform origin?
+Response 18:
+They control two different things about your hover effect:
+z-index controls which element appears on top when elements overlap
+When the image gets bigger, it might overlap another element. z-index: 10 tells the browser:
+Put this image in front of elements with lower z-index values.
+transform-origin controls where the image grows from when you use:
+Prompt 19:
+If I do numbers for some projects and images for others, can I make the number centered with the image?
+Response 19:
+If you want to keep your existing HTML structure and simply center the number relative to its column/image area, you can start with:
+.project-number {
+    justify-self: center;
+Prompt 20:
+can i add my own font choices together to make my own font family in html?: font-family: serif
+Response 20:
+Yes. In CSS, font-family can contain a list of font choices. The browser tries them from left to right until it finds one installed/available.
+I chose Courtier New, Tahoma, Verdana, sans-serif
+
+Prompt 21:
+can you put a container around Project Roster that is almost transparent and has curved edges
+
+Prompt 22:
+Yes. If you want the entire Project Roster section inside a subtle, almost-transparent rounded container, wrap it like this: …
+Did this for projects and career stats sections
+
+Other additions:
+Added linked in, git hub, and resume links
+Added github link and demo/ project poster links under project status (they were in status-link class divider so i made the display for that flex and flex-direction: column so they stacked on top of each other)(did this myself (yay!) from catching on to the structure)
+Deleted repetitive double header -> only kept the one at very top
+Changed a bit of wording around (about page mainly since my project descriptions were from my resume)
+
