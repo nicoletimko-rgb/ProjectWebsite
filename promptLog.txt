@@ -213,3 +213,22 @@ Added github link and demo/ project poster links under project status (they were
 Deleted repetitive double header -> only kept the one at very top
 Changed a bit of wording around (about page mainly since my project descriptions were from my resume)
 
+Prompt 23:
+index.html
+to the background can you add mostly transparent purple ellipses/circles hovering aorund to create movement in the background
+Response 23:
+Html file
+Prompt 24:
+I am not seeing the circles. Are you sure the circles are on top of the all black background?
+Response 24:
+Updated html
+Prompt 25:
+ok i see the circles but now i would like to make some changes: 1) make all circles 2) make bigger and overlap 3) i do not want to see the outlines as prominently (blend them) -> return me the updated html
+Response 25:
+Updated html
+Prompt 26:
+Perfect, i love it. can you please make a few more and slightly more transparent. return hrml
+Response 26:
+Absolutely — I added 3 more floating circles and made all of them slightly more transparent, while keeping the same soft, overlapping effect you liked. html
+
+
