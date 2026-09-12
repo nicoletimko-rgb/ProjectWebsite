@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Crossy Road 3D - NYC Street Edition</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * { 
+      box-sizing: border-box; 
+      user-select: none; 
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0a0e14;
+      font-family: 'Press Start 2P', monospace;
+      touch-action: none;
+    }
+    #canvas-container {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      touch-action: none;
+    }
+    #hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .score-display {
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      font-size: 38px;
+      color: #ffffff;
+      text-shadow: 4px 4px 0px #000;
+      letter-spacing: -2px;
+    }
+    .coin-display {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      font-size: 26px;
+      color: #ffd700;
+      text-shadow: 3px 3px 0px #000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .coin-icon {
+      width: 20px;
+      height: 20px;
+      background: #f39c12;
+      border: 3px solid #f1c40f;
+      display: inline-block;
+      box-shadow: 2px 2px 0 #000;
+    }
+    .best-score {
+      position: absolute;
+      top: 72px;
+      left: 30px;
+      font-size: 13px;
+      color: #ffd200;
+      text-shadow: 2px 2px 0px #000;
+    }
+    #game-over-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 15, 30, 0.85);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+      z-index: 100;
+      touch-action: auto;
+    }
+    #game-over-screen h1 {
+      font-size: 32px;
+      color: #ff3344;
+      text-shadow: 4px 4px 0px #000;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    #game-over-screen p {
+      font-size: 13px;
+      color: #fff;
+      line-height: 2;
+      text-align: center;
+      text-shadow: 2px 2px 0 #000;
+      margin: 4px 0;
+    }
+    .restart-btn {
+      margin-top: 25px;
+      padding: 16px 24px;
+      font-family: inherit;
+      font-size: 12px;
+      color: #fff;
+      background: #e67e22;
+      border: none;
+      box-shadow: 0 6px 0 #b35400, 0 8px 10px #000;
+      cursor: pointer;
+      text-align: center;
+    }
+    .restart-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #b35400;
+    }
+    #controls-hint {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      text-shadow: 1px 1px 0 #000;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="canvas-container"></div>
+  <div id="hud">
+    <div class="score-display" id="score-el">0</div>
+    <div class="best-score" id="high-score-el">TOP: 0</div>
+    <div class="coin-display">
+      <div class="coin-icon"></div>
+      <span id="coin-el">0</span>
+    </div>
+    <div id="controls-hint">TAP TO HOP • SWIPE TO MOVE</div>
+  </div>
+
+  <div id="game-over-screen">
+    <h1 id="death-reason">CRUSHED!</h1>
+    <p>DISTANCE: <span id="final-score">0</span></p>
+    <p>COINS COLLECTED: <span id="final-coins">0</span></p>
+    <p>BEST RECORD: <span id="final-best">0</span></p>
+    <button class="restart-btn" id="restart-btn">TAP TO HOP AGAIN</button>
+  </div>
+
+<script>
+// --- CONSTANTS & CONFIGURATION ---
+const TILE_SIZE = 20;
+const HALF_COLS = 10;
+const LANE_MIN_X = -HALF_COLS * TILE_SIZE;
+const LANE_MAX_X = HALF_COLS * TILE_SIZE;
+const CAR_COLORS = [0x1e3799, 0xb71540, 0x2c3e50, 0x4a69bd, 0x78e08f, 0x60a3bc];
+
+// Exact Building Palette: #33658A, #86BBD8, #2F4858, #011936, #465362, #82A3A1
+const TOWNHOUSE_COLORS = [
+  { wall: '#33658A', trim: '#86BBD8', door: '#011936' },
+  { wall: '#2F4858', trim: '#82A3A1', door: '#011936' },
+  { wall: '#465362', trim: '#86BBD8', door: '#2F4858' },
+  { wall: '#82A3A1', trim: '#33658A', door: '#011936' }
+];
+
+const SKYSCRAPER_COLORS = [
+  { wall: '#011936', accent: '#33658A', win: '#86BBD8', spire: 0x86BBD8 },
+  { wall: '#2F4858', accent: '#465362', win: '#82A3A1', spire: 0x82A3A1 },
+  { wall: '#33658A', accent: '#86BBD8', win: '#82A3A1', spire: 0x86BBD8 }
+];
+
+// Game State
+let currentScore = 0;
+let highestZReached = 0;
+let coinsCollected = 0;
+let highScore = parseInt(localStorage.getItem('cr_nyc_high_score') || '0', 10);
+let isGameOver = false;
+
+// Dynamic Camera & Scrolling
+let cameraDeadZ = 0;
+let cameraCreepSpeed = 8;
+
+// Option B: Wandering Path Center Tracker
+let wanderingPathCenter = 0;
+
+// Subway Stations Tracker
+let subwayPositions = [];
+let isTransitRiding = false;
+
+// Three.js Core
+let scene, camera, renderer;
+let chickenGroup;
+let lanes = [];
+let coins = [];
+
+const playerState = {
+  gridX: 0,
+  gridZ: 0,
+  currentX: 0,
+  currentZ: 0,
+  jumpProgress: 1,
+  startX: 0,
+  startZ: 0,
+  targetX: 0,
+  targetZ: 0,
+  facing: 0
+};
+
+// Audio
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function resumeAudioOnInteraction() {
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function playTone(freq, duration, type='square', decay=true) {
+  resumeAudioOnInteraction();
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    if (decay) gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch(e) {}
+}
+
+function playHopSound() { playTone(440, 0.08, 'triangle'); }
+function playCoinSound() {
+  playTone(880, 0.08, 'sine');
+  setTimeout(() => playTone(1320, 0.14, 'sine'), 60);
+}
+function playSubwayChime() {
+  playTone(523.25, 0.15, 'sine');
+  setTimeout(() => playTone(659.25, 0.18, 'sine'), 130);
+  setTimeout(() => playTone(783.99, 0.25, 'sine'), 260);
+}
+function playCrashSound() { playTone(120, 0.35, 'sawtooth'); }
+
+function createMat(color, flat=true) {
+  return new THREE.MeshLambertMaterial({ color, flatShading: flat });
+}
+function createEmissiveMat(color, emColor=color) {
+  return new THREE.MeshLambertMaterial({ color, emissive: emColor, emissiveIntensity: 0.6 });
+}
+
+// Procedural Sidewalk Texture
+function createSidewalkTexture() {
+  const c = document.createElement('canvas');
+  c.width = 128;
+  c.height = 128;
+  const ctx = c.getContext('2d');
+  
+  ctx.fillStyle = '#95a5a6';
+  ctx.fillRect(0, 0, 128, 128);
+
+  ctx.strokeStyle = '#636e72';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(2, 2, 60, 60);
+  ctx.strokeRect(66, 2, 60, 60);
+  ctx.strokeRect(2, 66, 60, 60);
+  ctx.strokeRect(66, 66, 60, 60);
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.07)';
+  for (let i = 0; i < 250; i++) {
+    ctx.fillRect(Math.random() * 128, Math.random() * 128, 2, 2);
+  }
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(16, 1);
+  return new THREE.MeshLambertMaterial({ map: tex });
+}
+
+// Procedural Window Grid Texture
+function generateFacadeTexture(bgColor, winColor, cols=5, rows=10) {
+  const c = document.createElement('canvas');
+  c.width = 128;
+  c.height = 256;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, 128, 256);
+
+  const cellW = 128 / cols;
+  const cellH = 256 / rows;
+  ctx.fillStyle = winColor;
+
+  for (let r = 0; r < rows; r++) {
+    for (let col = 0; col < cols; col++) {
+      if (Math.random() > 0.06) {
+        ctx.fillRect(col * cellW + 4, r * cellH + 4, cellW - 8, cellH - 8);
+      }
+    }
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.magFilter = THREE.NearestFilter;
+  tex.minFilter = THREE.NearestFilter;
+  return new THREE.MeshLambertMaterial({ map: tex });
+}
+
+// Procedural Times Square Front Billboard Textures
+const billboardMaterials = [];
+function generateBillboardMaterials() {
+  const configs = [
+    { bg: '#f1c40f', border: '#e67e22', text: 'PHOTO', sub: 'CAMERA' },
+    { bg: '#e74c3c', border: '#ffffff', text: 'SHOES', sub: 'SPORT' },
+    { bg: '#3498db', border: '#ffffff', text: 'JAZZ', sub: 'NYC LIVE' },
+    { bg: '#9b59b6', border: '#f1c40f', text: 'CINEMA', sub: 'TONIGHT' },
+    { bg: '#e67e22', border: '#ffffff', text: 'PARIS', sub: 'PARFUM' }
+  ];
+
+  configs.forEach(cfg => {
+    const c = document.createElement('canvas');
+    c.width = 128;
+    c.height = 128;
+    const ctx = c.getContext('2d');
+
+    ctx.fillStyle = cfg.border;
+    ctx.fillRect(0, 0, 128, 128);
+    ctx.fillStyle = cfg.bg;
+    ctx.fillRect(6, 6, 116, 116);
+
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(14, 14, 100, 100);
+
+    ctx.fillStyle = '#111';
+    ctx.font = 'bold 22px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(cfg.text, 64, 56);
+
+    ctx.font = 'bold 14px Arial, sans-serif';
+    ctx.fillText(cfg.sub, 64, 84);
+
+    const tex = new THREE.CanvasTexture(c);
+    tex.magFilter = THREE.NearestFilter;
+    tex.minFilter = THREE.NearestFilter;
+    billboardMaterials.push(new THREE.MeshLambertMaterial({ map: tex }));
+  });
+}
+generateBillboardMaterials();
+
+function attachFrontBillboard(buildingGroup, yPos, w=14, h=14) {
+  const mat = billboardMaterials[Math.floor(Math.random() * billboardMaterials.length)];
+  const bMesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.8), mat);
+  bMesh.position.set(0, yPos, -9.4);
+  buildingGroup.add(bMesh);
+}
+
+// Chicken Model
+function buildChicken() {
+  const group = new THREE.Group();
+  const whiteMat = createMat(0xf8f9fa);
+  const redMat = createMat(0xe74c3c);
+  const yellowMat = createMat(0xf39c12);
+  const blackMat = createMat(0x111111);
+
+  const body = new THREE.Mesh(new THREE.BoxGeometry(10, 11, 10), whiteMat);
+  body.position.y = 7.5;
+  body.castShadow = true;
+  group.add(body);
+
+  const crest = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 6), redMat);
+  crest.position.set(0, 14, -1);
+  group.add(crest);
+
+  const beak = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 4), yellowMat);
+  beak.position.set(0, 7.5, 6);
+  group.add(beak);
+
+  const wattle = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 2), redMat);
+  wattle.position.set(0, 4.5, 5);
+  group.add(wattle);
+
+  const leftEye = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2, 2), blackMat);
+  leftEye.position.set(-4.5, 8.5, 3.5);
+  const rightEye = leftEye.clone();
+  rightEye.position.x = 4.5;
+  group.add(leftEye, rightEye);
+
+  const legGeom = new THREE.BoxGeometry(2, 3, 2);
+  const leftLeg = new THREE.Mesh(legGeom, yellowMat);
+  leftLeg.position.set(-3, 1.5, 0);
+  const rightLeg = leftLeg.clone();
+  rightLeg.position.x = 3;
+  group.add(leftLeg, rightLeg);
+
+  group.scale.set(0.9, 0.9, 0.9);
+  return group;
+}
+
+// Townhouse
+function buildTownhouse() {
+  const group = new THREE.Group();
+  const theme = TOWNHOUSE_COLORS[Math.floor(Math.random() * TOWNHOUSE_COLORS.length)];
+  const wallMat = generateFacadeTexture(theme.wall, '#86BBD8', 4, 8);
+  const trimMat = createMat(theme.trim);
+  const doorMat = createMat(theme.door);
+
+  const height = 34 + Math.floor(Math.random() * 10);
+  const body = new THREE.Mesh(new THREE.BoxGeometry(18, height, 18), wallMat);
+  body.position.y = height / 2;
+  group.add(body);
+
+  const cornice = new THREE.Mesh(new THREE.BoxGeometry(19.5, 3.5, 19.5), trimMat);
+  cornice.position.y = height + 1;
+  group.add(cornice);
+
+  const stoopMat = createMat(0x82A3A1);
+  const stoop = new THREE.Mesh(new THREE.BoxGeometry(7, 4, 6), stoopMat);
+  stoop.position.set(0, 2, 10.5);
+  const door = new THREE.Mesh(new THREE.BoxGeometry(4.5, 7.5, 0.8), doorMat);
+  door.position.set(0, 7.5, 9.2);
+  group.add(stoop, door);
+
+  if (Math.random() < 0.45) {
+    attachFrontBillboard(group, height * 0.6, 12, 12);
+  }
+
+  return group;
+}
+
+// Skyscraper
+function buildArtDecoSkyscraper() {
+  const group = new THREE.Group();
+  const theme = SKYSCRAPER_COLORS[Math.floor(Math.random() * SKYSCRAPER_COLORS.length)];
+  const baseMat = generateFacadeTexture(theme.wall, theme.win, 5, 16);
+  const accentMat = createMat(theme.accent);
+  const spireMat = createEmissiveMat(theme.spire);
+
+  const height = 75 + Math.random() * 25;
+  const base = new THREE.Mesh(new THREE.BoxGeometry(18, height, 18), baseMat);
+  base.position.y = height / 2;
+  group.add(base);
+
+  const tier1 = new THREE.Mesh(new THREE.BoxGeometry(14, 18, 14), baseMat);
+  tier1.position.y = height + 9;
+  group.add(tier1);
+
+  const tier2 = new THREE.Mesh(new THREE.BoxGeometry(9, 12, 9), accentMat);
+  tier2.position.y = height + 24;
+  group.add(tier2);
+
+  const spireGeom = new THREE.ConeGeometry(3.5, 16, 4);
+  const spire = new THREE.Mesh(spireGeom, spireMat);
+  spire.position.y = height + 36;
+  spire.rotation.y = Math.PI / 4;
+  group.add(spire);
+
+  if (Math.random() < 0.65) {
+    attachFrontBillboard(group, 24 + Math.random() * 16, 15, 15);
+  }
+
+  return group;
+}
+
+// Subway Station: Entrance vs Exit
+function buildSubwayStation(type = 'entrance') {
+  const group = new THREE.Group();
+  const mtaGreen = createMat(0x0e5a3c);
+  const darkBase = createMat(0x2d3436);
+  const stepMat = createMat(0x636e72);
+  const yellowStripeMat = createMat(0xf1c40f);
+
+  const isExit = (type === 'exit');
+
+  const curbBase = new THREE.Mesh(new THREE.BoxGeometry(18, 1.4, 16), darkBase);
+  curbBase.position.y = 0.7;
+  group.add(curbBase);
+
+  const pit = new THREE.Mesh(new THREE.BoxGeometry(13, 2, 12), createMat(0x111111));
+  pit.position.set(0, 0.4, 0);
+  group.add(pit);
+
+  for (let i = 0; i < 4; i++) {
+    const step = new THREE.Mesh(new THREE.BoxGeometry(11, 1.2, 2.4), stepMat);
+    const zPos = isExit ? (-4.2 + (i * 2.5)) : (4.2 - (i * 2.5));
+    step.position.set(0, 0.3 - (i * 0.4), zPos);
+    group.add(step);
+  }
+
+  const cautionZ = isExit ? 6.2 : -6.2;
+  const caution = new THREE.Mesh(new THREE.BoxGeometry(11.2, 0.2, 0.8), yellowStripeMat);
+  caution.position.set(0, 1.45, cautionZ);
+  group.add(caution);
+
+  const backRailingZ = isExit ? -6.8 : 6.8;
+  const backRailing = new THREE.Mesh(new THREE.BoxGeometry(16, 6, 0.8), mtaGreen);
+  backRailing.position.set(0, 4.4, backRailingZ);
+
+  const leftRailing = new THREE.Mesh(new THREE.BoxGeometry(0.8, 6, 13.8), mtaGreen);
+  leftRailing.position.set(-7.4, 4.4, 0);
+
+  const rightRailing = new THREE.Mesh(new THREE.BoxGeometry(0.8, 6, 13.8), mtaGreen);
+  rightRailing.position.set(7.4, 4.4, 0);
+
+  group.add(backRailing, leftRailing, rightRailing);
+
+  const signMat = createMat(0x050505);
+  const signZ = isExit ? -6.9 : 6.9;
+  const sign = new THREE.Mesh(new THREE.BoxGeometry(9, 2.2, 0.9), signMat);
+  sign.position.set(0, 5, signZ);
+  group.add(sign);
+
+  const postGeom = new THREE.CylinderGeometry(0.35, 0.35, 14, 8);
+  const globeGeom = new THREE.SphereGeometry(1.4, 8, 8);
+  const globeMat = createEmissiveMat(0x2ecc71);
+  const lampZ = isExit ? 6.8 : -6.8;
+
+  [[-7.4, lampZ], [7.4, lampZ]].forEach(([px, pz]) => {
+    const post = new THREE.Mesh(postGeom, mtaGreen);
+    post.position.set(px, 7, pz);
+    const globe = new THREE.Mesh(globeGeom, globeMat);
+    globe.position.set(px, 14.2, pz);
+    group.add(post, globe);
+  });
+
+  return group;
+}
+
+// Hot Dog Cart
+function buildHotDogCart() {
+  const group = new THREE.Group();
+  const silverMat = createMat(0xbdc3c7);
+  const wheelMat = createMat(0x111111);
+  const umbrellaBlue = createMat(0x0984e3);
+  const umbrellaYellow = createMat(0xf1c40f);
+
+  const cartBody = new THREE.Mesh(new THREE.BoxGeometry(10, 6, 7), silverMat);
+  cartBody.position.y = 4.5;
+  group.add(cartBody);
+
+  const wheelGeom = new THREE.CylinderGeometry(2, 2, 0.8, 12);
+  const w1 = new THREE.Mesh(wheelGeom, wheelMat);
+  w1.rotation.z = Math.PI / 2;
+  w1.position.set(-5, 2, 0);
+  const w2 = w1.clone();
+  w2.position.x = 5;
+  group.add(w1, w2);
+
+  const condiment = new THREE.Mesh(new THREE.BoxGeometry(6, 1.5, 2), createMat(0xe74c3c));
+  condiment.position.set(0, 8, 1.5);
+  group.add(condiment);
+
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 14, 6), createMat(0x7f8c8d));
+  pole.position.set(-2.5, 11, -1);
+  group.add(pole);
+
+  const umb1 = new THREE.Mesh(new THREE.ConeGeometry(7, 3.5, 4), umbrellaYellow);
+  umb1.position.set(-2.5, 17, -1);
+  const umb2 = new THREE.Mesh(new THREE.ConeGeometry(6.9, 3.4, 4), umbrellaBlue);
+  umb2.position.set(-2.5, 17, -1);
+  umb2.rotation.y = Math.PI / 4;
+  group.add(umb1, umb2);
+
+  return group;
+}
+
+function buildRandomBuilding() {
+  return Math.random() < 0.55 ? buildTownhouse() : buildArtDecoSkyscraper();
+}
+
+// Vehicles
+function buildCityVehicle() {
+  const group = new THREE.Group();
+  const wheelMat = createMat(0x111111);
+  const glassMat = createMat(0x34495e);
+
+  const isTaxi = Math.random() < 0.45;
+  const carColor = isTaxi ? 0xf1c40f : CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)];
+  const bodyMat = createMat(carColor);
+
+  const body = new THREE.Mesh(new THREE.BoxGeometry(22, 6.5, 12), bodyMat);
+  body.position.y = 5;
+  group.add(body);
+
+  const cabin = new THREE.Mesh(new THREE.BoxGeometry(13, 5.5, 10.5), bodyMat);
+  cabin.position.set(-0.5, 10.5, 0);
+  group.add(cabin);
+
+  const frontGlass = new THREE.Mesh(new THREE.BoxGeometry(1.5, 4.2, 9), glassMat);
+  frontGlass.position.set(5.5, 10, 0);
+  const rearGlass = frontGlass.clone();
+  rearGlass.position.set(-6.5, 10, 0);
+  group.add(frontGlass, rearGlass);
+
+  const headL = new THREE.Mesh(new THREE.BoxGeometry(0.8, 2, 2.5), createEmissiveMat(0xfffae6));
+  headL.position.set(11, 5.5, 3.5);
+  const headR = headL.clone();
+  headR.position.z = -3.5;
+
+  const tailL = new THREE.Mesh(new THREE.BoxGeometry(0.8, 2, 2.5), createEmissiveMat(0xe74c3c));
+  tailL.position.set(-11, 5.5, 3.5);
+  const tailR = tailL.clone();
+  tailR.position.z = -3.5;
+
+  group.add(headL, headR, tailL, tailR);
+
+  if (isTaxi) {
+    const taxiSign = new THREE.Mesh(new THREE.BoxGeometry(5, 2.4, 4), createEmissiveMat(0xff9f1a));
+    taxiSign.position.set(-0.5, 14.2, 0);
+    group.add(taxiSign);
+  }
+
+  const wGeom = new THREE.BoxGeometry(4, 4, 1.8);
+  [-6.5, 6.5].forEach(x => {
+    const w1 = new THREE.Mesh(wGeom, wheelMat);
+    w1.position.set(x, 2, 6.2);
+    const w2 = new THREE.Mesh(wGeom, wheelMat);
+    w2.position.set(x, 2, -6.2);
+    group.add(w1, w2);
+  });
+
+  group.hitboxWidth = 22;
+  return group;
+}
+
+// Gold Coin
+function buildCoin(x, z) {
+  const group = new THREE.Group();
+  const coinMat = createMat(0xf1c40f);
+  const innerMat = createMat(0xffa000);
+
+  const coin = new THREE.Mesh(new THREE.BoxGeometry(6, 6, 2), coinMat);
+  const inner = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 2.4), innerMat);
+  group.add(coin, inner);
+  group.position.set(x, 7, z);
+  group.gridX = Math.round(x / TILE_SIZE);
+  group.gridZ = Math.round(z / TILE_SIZE);
+  scene.add(group);
+  return group;
+}
+
+const sidewalkMat = createSidewalkTexture();
+
+// --- WORLD GENERATOR ---
+function createLane(gridZ) {
+  const laneGroup = new THREE.Group();
+  laneGroup.position.z = gridZ * TILE_SIZE;
+
+  let type = 'grass';
+
+  const progressFactor = Math.max(0, gridZ);
+  const difficultyBoost = 1 + (progressFactor * 0.035);
+
+  if (gridZ > 3) {
+    type = (Math.random() < 0.6) ? 'road' : 'grass';
+  }
+
+  const laneData = {
+    type,
+    gridZ,
+    group: laneGroup,
+    trees: [],
+    subwayEntrances: [],
+    subwayExits: [],
+    vehicles: [],
+    speed: 0
+  };
+
+  const groundW = (HALF_COLS * 2 + 10) * TILE_SIZE;
+
+  if (type === 'grass') {
+    const sidewalk = new THREE.Mesh(new THREE.BoxGeometry(groundW, 8, TILE_SIZE), sidewalkMat);
+    sidewalk.position.y = -4;
+    laneGroup.add(sidewalk);
+
+    const curb = new THREE.Mesh(new THREE.BoxGeometry(groundW, 0.8, 1.5), createMat(0x636e72));
+    curb.position.set(0, 0.2, TILE_SIZE / 2 - 0.75);
+    laneGroup.add(curb);
+
+    if (gridZ !== 0) {
+      const drift = [-1, 0, 1][Math.floor(Math.random() * 3)];
+      wanderingPathCenter = Math.max(-5, Math.min(5, wanderingPathCenter + drift));
+
+      const reservedCorridor = [
+        wanderingPathCenter - 1,
+        wanderingPathCenter,
+        wanderingPathCenter + 1
+      ];
+
+      const exitBlockedCols = [];
+      subwayPositions.forEach(sp => {
+        if (sp.type === 'exit' && (gridZ === sp.z + 1 || gridZ === sp.z)) {
+          exitBlockedCols.push(sp.x - 1, sp.x, sp.x + 1);
+        }
+      });
+
+      for (let col = -HALF_COLS; col <= HALF_COLS; col++) {
+        if (reservedCorridor.includes(col)) continue;
+        if (exitBlockedCols.includes(col)) continue;
+
+        if (Math.abs(col) >= 4) {
+          if (Math.random() < 0.65) {
+            laneData.trees.push(col);
+            const bldg = buildRandomBuilding();
+            bldg.position.set(col * TILE_SIZE, 0, 0);
+            laneGroup.add(bldg);
+          }
+        } else {
+          if (Math.random() < 0.35) {
+            laneData.trees.push(col);
+            const townhouse = buildTownhouse();
+            townhouse.position.set(col * TILE_SIZE, 0, 0);
+            laneGroup.add(townhouse);
+          }
+        }
+      }
+
+      for (let col = -HALF_COLS + 1; col <= HALF_COLS - 1; col += 2) {
+        if (!laneData.trees.includes(col) && !reservedCorridor.includes(col) && !exitBlockedCols.includes(col)) {
+          if (Math.random() < 0.42) {
+            const isTooClose = subwayPositions.some(pos => {
+              const dx = pos.x - col;
+              const dz = pos.z - gridZ;
+              return Math.sqrt(dx * dx + dz * dz) < 4;
+            });
+
+            if (!isTooClose) {
+              const lastStation = subwayPositions[subwayPositions.length - 1];
+              const isInMiddle8 = (col >= -4 && col <= 4);
+              let stationType = 'entrance';
+
+              if (lastStation && lastStation.type === 'entrance' && isInMiddle8 && Math.random() < 0.60) {
+                stationType = 'exit';
+              }
+
+              const stationMesh = buildSubwayStation(stationType);
+              stationMesh.position.set(col * TILE_SIZE, 0, 0);
+              laneGroup.add(stationMesh);
+
+              if (stationType === 'entrance') {
+                laneData.subwayEntrances.push(col);
+              } else {
+                laneData.subwayExits.push(col);
+                laneData.trees.push(col);
+              }
+
+              subwayPositions.push({ x: col, z: gridZ, type: stationType });
+            } else if (Math.random() < 0.45) {
+              laneData.trees.push(col);
+              const cart = buildHotDogCart();
+              cart.position.set(col * TILE_SIZE, 0, 0);
+              laneGroup.add(cart);
+            }
+          }
+        }
+      }
+    }
+  } else {
+    // Road
+    const road = new THREE.Mesh(new THREE.BoxGeometry(groundW, 8, TILE_SIZE), createMat(0x2d3436));
+    road.position.y = -4;
+    laneGroup.add(road);
+
+    const dashCount = Math.floor(groundW / 30);
+    for (let i = -dashCount / 2; i <= dashCount / 2; i++) {
+      const dash = new THREE.Mesh(new THREE.BoxGeometry(14, 0.2, 1.6), createMat(0xf5f6fa));
+      dash.position.set(i * 30, 0.05, 0);
+      laneGroup.add(dash);
+    }
+
+    const baseSpeed = Math.random() * 40 + 45;
+    laneData.speed = (baseSpeed * difficultyBoost) * (Math.random() < 0.5 ? 1 : -1);
+
+    const count = Math.floor(Math.random() * 2) + 2;
+    const spacing = groundW / count;
+
+    for (let i = 0; i < count; i++) {
+      const car = buildCityVehicle();
+      car.position.x = LANE_MIN_X - 40 + i * spacing + (Math.random() * 20 - 10);
+      if (laneData.speed < 0) car.rotation.y = Math.PI;
+      laneGroup.add(car);
+      laneData.vehicles.push(car);
+    }
+  }
+
+  // Coins
+  if (Math.random() < 0.30) {
+    const cx = (Math.floor(Math.random() * (HALF_COLS * 2 - 2)) - (HALF_COLS - 1)) * TILE_SIZE;
+    const colIdx = Math.round(cx / TILE_SIZE);
+    if (!laneData.trees.includes(colIdx) && !laneData.subwayEntrances.includes(colIdx)) {
+      coins.push(buildCoin(cx, gridZ * TILE_SIZE));
+    }
+  }
+
+  scene.add(laneGroup);
+  lanes.push(laneData);
+}
+
+function ensureNextSubwayExitExists(currentZ) {
+  let next = subwayPositions.find(pos => pos.z > currentZ + 2 && pos.type === 'exit' && Math.abs(pos.x) <= 4);
+  if (next) return next;
+
+  let targetZ = lanes[lanes.length - 1].gridZ + 1;
+  while (!next && targetZ < currentZ + 40) {
+    createLane(targetZ);
+    next = subwayPositions.find(pos => pos.z > currentZ + 2 && pos.type === 'exit' && Math.abs(pos.x) <= 4);
+    targetZ++;
+  }
+
+  if (!next) {
+    const sidewalkLane = lanes.slice().reverse().find(l => l.type === 'grass' && l.gridZ > currentZ + 3);
+    if (sidewalkLane) {
+      const col = Math.max(-4, Math.min(4, wanderingPathCenter));
+      sidewalkLane.subwayExits.push(col);
+      sidewalkLane.trees.push(col);
+      const subway = buildSubwayStation('exit');
+      subway.position.set(col * TILE_SIZE, 0, 0);
+      sidewalkLane.group.add(subway);
+      next = { x: col, z: sidewalkLane.gridZ, type: 'exit' };
+      subwayPositions.push(next);
+    }
+  }
+  return next;
+}
+
+function triggerSubwayTeleport(exitStation) {
+  isTransitRiding = true;
+  playSubwayChime();
+
+  chickenGroup.visible = false;
+
+  setTimeout(() => {
+    playerState.gridX = exitStation.x;
+    playerState.gridZ = exitStation.z;
+    playerState.startX = exitStation.x * TILE_SIZE;
+    playerState.startZ = exitStation.z * TILE_SIZE;
+    playerState.targetX = exitStation.x * TILE_SIZE;
+    playerState.targetZ = exitStation.z * TILE_SIZE;
+    playerState.currentX = exitStation.x * TILE_SIZE;
+    playerState.currentZ = exitStation.z * TILE_SIZE;
+    playerState.jumpProgress = 1;
+    playerState.facing = 0;
+
+    cameraDeadZ = Math.max(cameraDeadZ, exitStation.z * TILE_SIZE - 40);
+    camera.position.z = playerState.currentZ - 150;
+
+    if (exitStation.z > highestZReached) {
+      currentScore += (exitStation.z - highestZReached);
+      highestZReached = exitStation.z;
+      document.getElementById('score-el').innerText = currentScore;
+      if (currentScore > highScore) {
+        highScore = currentScore;
+        localStorage.setItem('cr_nyc_high_score', highScore);
+        document.getElementById('high-score-el').innerText = `TOP: ${highScore}`;
+      }
+    }
+
+    const furthestZ = lanes[lanes.length - 1].gridZ;
+    if (furthestZ - playerState.gridZ < 22) {
+      for (let z = furthestZ + 1; z <= furthestZ + 12; z++) {
+        createLane(z);
+      }
+    }
+
+    chickenGroup.position.set(playerState.currentX, 2, playerState.currentZ + 4);
+    chickenGroup.visible = true;
+    isTransitRiding = false;
+  }, 420);
+}
+
+// --- INIT THREE.JS SCENE ---
+function init() {
+  const container = document.getElementById('canvas-container');
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x131a22);
+  scene.fog = new THREE.Fog(0x131a22, 340, 720);
+
+  const aspect = window.innerWidth / window.innerHeight;
+  // Increase frustum slightly on narrow portrait phones to frame lanes comfortably
+  const d = (window.innerWidth < 600) ? 175 : 145;
+  camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1500);
+
+  camera.position.set(0, 250, -150);
+  camera.lookAt(0, 0, 80);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+  scene.add(ambientLight);
+
+  const dirLight = new THREE.DirectionalLight(0xfffaed, 0.7);
+  dirLight.position.set(100, 200, -80);
+  dirLight.castShadow = true;
+  scene.add(dirLight);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  container.appendChild(renderer.domElement);
+
+  chickenGroup = buildChicken();
+  scene.add(chickenGroup);
+
+  document.getElementById('high-score-el').innerText = `TOP: ${highScore}`;
+
+  resetGame();
+  setupEvents();
+  setupTouchEvents();
+  animate();
+}
+
+function resetGame() {
+  lanes.forEach(l => scene.remove(l.group));
+  lanes = [];
+
+  coins.forEach(c => scene.remove(c));
+  coins = [];
+
+  subwayPositions = [];
+  isTransitRiding = false;
+
+  currentScore = 0;
+  coinsCollected = 0;
+  highestZReached = 0;
+  isGameOver = false;
+  cameraDeadZ = -30;
+  cameraCreepSpeed = 9;
+  wanderingPathCenter = 0;
+
+  playerState.gridX = 0;
+  playerState.gridZ = 0;
+  playerState.currentX = 0;
+  playerState.currentZ = 0;
+  playerState.targetX = 0;
+  playerState.targetZ = 0;
+  playerState.startX = 0;
+  playerState.startZ = 0;
+  playerState.jumpProgress = 1;
+  playerState.facing = 0;
+
+  chickenGroup.visible = true;
+  chickenGroup.position.set(0, 0, 0);
+  chickenGroup.rotation.y = 0;
+
+  document.getElementById('score-el').innerText = '0';
+  document.getElementById('coin-el').innerText = '0';
+  document.getElementById('game-over-screen').style.display = 'none';
+
+  for (let z = -5; z <= 24; z++) {
+    createLane(z);
+  }
+}
+
+// --- CONTROLS & HOPPING ---
+function hop(dx, dz) {
+  if (isGameOver || isTransitRiding || playerState.jumpProgress < 0.75) return;
+
+  const newGridX = Math.max(-HALF_COLS, Math.min(HALF_COLS, playerState.gridX + dx));
+  const newGridZ = playerState.gridZ + dz;
+
+  const targetLane = lanes.find(l => l.gridZ === newGridZ);
+
+  if (targetLane && targetLane.trees.includes(newGridX)) {
+    return;
+  }
+
+  if (targetLane && targetLane.subwayEntrances && targetLane.subwayEntrances.includes(newGridX)) {
+    const exitStation = ensureNextSubwayExitExists(newGridZ);
+    if (exitStation) {
+      triggerSubwayTeleport(exitStation);
+      return;
+    }
+  }
+
+  playHopSound();
+
+  playerState.startX = playerState.currentX;
+  playerState.startZ = playerState.currentZ;
+  playerState.targetX = newGridX * TILE_SIZE;
+  playerState.targetZ = newGridZ * TILE_SIZE;
+  playerState.gridX = newGridX;
+  playerState.gridZ = newGridZ;
+  playerState.jumpProgress = 0;
+
+  if (dz > 0) playerState.facing = 0;
+  else if (dz < 0) playerState.facing = Math.PI;
+  else if (dx > 0) playerState.facing = -Math.PI / 2;
+  else if (dx < 0) playerState.facing = Math.PI / 2;
+
+  if (newGridZ > highestZReached) {
+    currentScore += (newGridZ - highestZReached);
+    highestZReached = newGridZ;
+    document.getElementById('score-el').innerText = currentScore;
+    if (currentScore > highScore) {
+      highScore = currentScore;
+      localStorage.setItem('cr_nyc_high_score', highScore);
+      document.getElementById('high-score-el').innerText = `TOP: ${highScore}`;
+    }
+  }
+
+  const furthestZ = lanes[lanes.length - 1].gridZ;
+  if (furthestZ - playerState.gridZ < 22) {
+    for (let z = furthestZ + 1; z <= furthestZ + 6; z++) {
+      createLane(z);
+    }
+    while (lanes.length > 40) {
+      const old = lanes.shift();
+      scene.remove(old.group);
+      subwayPositions = subwayPositions.filter(pos => pos.z > old.gridZ);
+    }
+  }
+}
+
+// Keyboard & Window Resize
+function setupEvents() {
+  window.addEventListener('keydown', (e) => {
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+      e.preventDefault();
+    }
+    if (isGameOver) {
+      if (e.key === ' ' || e.key === 'Enter') resetGame();
+      return;
+    }
+
+    if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') hop(0, 1);
+    else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') hop(0, -1);
+    else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') hop(1, 0);
+    else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') hop(-1, 0);
+  });
+
+  document.getElementById('restart-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    resetGame();
+  });
+
+  window.addEventListener('resize', () => {
+    const aspect = window.innerWidth / window.innerHeight;
+    const d = (window.innerWidth < 600) ? 175 : 145;
+    camera.left = -d * aspect;
+    camera.right = d * aspect;
+    camera.top = d;
+    camera.bottom = -d;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+}
+
+// --- MOBILE TOUCH CONTROLS (Swipe & Tap) ---
+function setupTouchEvents() {
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
+
+  window.addEventListener('touchstart', (e) => {
+    resumeAudioOnInteraction();
+    if (e.touches.length > 0) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = performance.now();
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchend', (e) => {
+    if (isGameOver) return; // Restart button handles touch restart
+
+    if (e.changedTouches.length > 0) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+      const dt = performance.now() - touchStartTime;
+
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+      const swipeDistanceThreshold = 24;
+
+      if (absX < swipeDistanceThreshold && absY < swipeDistanceThreshold && dt < 300) {
+        // Simple tap: Hop forward
+        hop(0, 1);
+      } else if (absX > absY) {
+        // Horizontal Swipe
+        if (dx > swipeDistanceThreshold) {
+          hop(-1, 0); // Right hop
+        } else if (dx < -swipeDistanceThreshold) {
+          hop(1, 0);  // Left hop
+        }
+      } else {
+        // Vertical Swipe
+        if (dy < -swipeDistanceThreshold) {
+          hop(0, 1);  // Swipe up: forward
+        } else if (dy > swipeDistanceThreshold) {
+          hop(0, -1); // Swipe down: backward
+        }
+      }
+    }
+  }, { passive: false });
+}
+
+function triggerGameOver(reason="CRUSHED!") {
+  if (isGameOver) return;
+  isGameOver = true;
+  playCrashSound();
+
+  document.getElementById('death-reason').innerText = reason;
+  document.getElementById('final-score').innerText = currentScore;
+  document.getElementById('final-coins').innerText = coinsCollected;
+  document.getElementById('final-best').innerText = highScore;
+  document.getElementById('game-over-screen').style.display = 'flex';
+}
+
+// --- MAIN LOOP ---
+let lastTime = performance.now();
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const now = performance.now();
+  const dt = Math.min((now - lastTime) / 1000, 0.1);
+  lastTime = now;
+
+  if (!isGameOver) {
+    if (!isTransitRiding) {
+      if (playerState.jumpProgress < 1) {
+        playerState.jumpProgress += dt * 6.5;
+        if (playerState.jumpProgress >= 1) {
+          playerState.jumpProgress = 1;
+          playerState.currentX = playerState.targetX;
+          playerState.currentZ = playerState.targetZ;
+        } else {
+          playerState.currentX = THREE.MathUtils.lerp(playerState.startX, playerState.targetX, playerState.jumpProgress);
+          playerState.currentZ = THREE.MathUtils.lerp(playerState.startZ, playerState.targetZ, playerState.jumpProgress);
+        }
+      }
+
+      const hopY = Math.sin(playerState.jumpProgress * Math.PI) * 9;
+      chickenGroup.position.set(playerState.currentX, hopY, playerState.currentZ);
+      chickenGroup.rotation.y = playerState.facing;
+
+      cameraCreepSpeed += dt * 0.12;
+      cameraDeadZ += cameraCreepSpeed * dt;
+
+      if (playerState.currentZ < cameraDeadZ - 18) {
+        triggerGameOver("TOO SLOW!");
+      }
+    }
+
+    const desiredCamZ = Math.max(cameraDeadZ, playerState.currentZ) - 150;
+    camera.position.z += (desiredCamZ - camera.position.z) * 0.08;
+    camera.position.x = 0;
+    camera.position.y = 250;
+    camera.lookAt(0, 0, camera.position.z + 230);
+
+    lanes.forEach(lane => {
+      if (lane.type === 'road') {
+        lane.vehicles.forEach(veh => {
+          veh.position.x += lane.speed * dt;
+          if (lane.speed > 0 && veh.position.x > LANE_MAX_X + 60) {
+            veh.position.x = LANE_MIN_X - 60;
+          } else if (lane.speed < 0 && veh.position.x < LANE_MIN_X - 60) {
+            veh.position.x = LANE_MAX_X + 60;
+          }
+
+          if (!isTransitRiding && lane.gridZ === playerState.gridZ && playerState.jumpProgress >= 0.7) {
+            const hitDist = veh.hitboxWidth / 2 + 3.5;
+            if (Math.abs(veh.position.x - playerState.currentX) < hitDist) {
+              triggerGameOver("HIT BY TRAFFIC!");
+            }
+          }
+        });
+      }
+    });
+
+    for (let i = coins.length - 1; i >= 0; i--) {
+      const c = coins[i];
+      c.rotation.y += dt * 3.5;
+
+      if (!isTransitRiding && c.gridZ === playerState.gridZ && Math.abs(c.position.x - playerState.currentX) < 9) {
+        playCoinSound();
+        coinsCollected++;
+        currentScore++;
+        document.getElementById('coin-el').innerText = coinsCollected;
+        document.getElementById('score-el').innerText = currentScore;
+        scene.remove(c);
+        coins.splice(i, 1);
+      }
+    }
+  }
+
+  renderer.render(scene, camera);
+}
+
+window.onload = init;
+</script>
+</body>
+</html>
