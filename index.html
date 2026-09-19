@@ -913,19 +913,50 @@
 
         .game-container {
             width: 100%;
-            max-width: 1400px;
-            margin: 30px auto;
-            border-radius: 18px;
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 30px;
+            background: transparent;
             overflow: hidden;
         }
 
         .game-container iframe {
             width: 100%;
-            height: 850px;
+            height: 700px;
             border: none;
+            outline: none;
+            box-shadow: none;
             display: block;
+            background: transparent;
+            overflow: hidden;
         }
 
+        .project-button {
+            display: block;
+            width: fit-content; /* Fits the button tightly to its text */
+            margin: 0 auto;
+            padding: 12px 24px;
+            background-color: #6c5ce7; /* Matches the purple theme */
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            cursor: pointer;
+        }
+
+        /* Hover & Active States */
+        .project-button:hover {
+            background-color: #5b4bc4;
+            text-decoration: none;
+        }
+
+        .project-button:active {
+            transform: scale(0.98);
+        }
 
         /* =========================================================
            RESPONSIVE DESIGN
@@ -1586,14 +1617,17 @@
 
             </div>
 
+            <br>
+            <br>
+
             <div class="game-container">
                 <iframe
                     src="https://nicoletimko-rgb.github.io/APIAPP/"
                     title="Guess the NBA Player"
-                    loading="lazy">
+                    loading="lazy" scrolling="no">
                 </iframe>
             </div>
-
+            <br>
             <a
                 href="https://nicoletimko-rgb.github.io/APIAPP/"
                 target="_blank"
@@ -1601,9 +1635,7 @@
                 class="project-button">
                 Play Full Screen
             </a>
-
         </section>
-
 
 
         <!-- =====================================================
@@ -1611,6 +1643,7 @@
         ====================================================== -->
 
         <section class="section-block" id="projects">
+            
             <div class="project-roster-container">
 
                 <h2 class="section-title">Project Roster</h2>
